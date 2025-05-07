@@ -8,13 +8,13 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        Label label = new Label("Hello, JavaFX!");
+        Label label = new Label("I AM BUDGET");
         StackPane root = new StackPane(label);
         Scene scene = new Scene(root, 400, 300);
 
         primaryStage.setTitle("Budget App Test");
         primaryStage.setScene(scene);
-        primaryStage.show();  // ← this line is crucial
+        primaryStage.show();
     }
 
     public static void main(String[] args) {
