@@ -11,7 +11,7 @@ public class Auth {
         ArrayList<User> users = UserDatabase.loadUsers();
 
         for (User u : users) {
-            if (u.getEmail().equals(newUser.getEmail())) {
+            if (u.getUsername().equals(newUser.getUsername())) {
                 return false;
             }
         }
@@ -21,14 +21,17 @@ public class Auth {
         return true;
     }
 
-    public static User login(String email, String password) {
+    public static int login(String username, String password) {
         ArrayList<User> users = UserDatabase.loadUsers();
 
         for (User u : users) {
-            if (u.getEmail().equals(email) && u.getPassword().equals(password)) {
-                return u;
+            if (u.getUsername().equals(username)) {
+                 if(u.getPassword().equals(password))
+                     return 2;
+                 else return 1;
             }
         }
-        return null;
+        return 0;
+
     }
 }

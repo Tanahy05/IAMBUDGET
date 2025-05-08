@@ -23,4 +23,19 @@ public class UserDatabase {
             e.printStackTrace();
         }
     }
+    public static int getNextUserId() {
+
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE_PATH))) {
+            ArrayList<User> users = (ArrayList<User>) ois.readObject();
+            if (users.isEmpty()) {
+                return 1;
+            }
+            // Get ID of last user and increment
+            return users.get(users.size() - 1).getUserID() + 1;
+        } catch (IOException | ClassNotFoundException e) {
+            return 0;
+        }
+    }
+
+
 }
