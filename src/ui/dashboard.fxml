@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8.0.171"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controller.Dashboard"
+            prefHeight="600.0" prefWidth="900.0">
+
+    <top>
+        <HBox style="-fx-background-color: #2c3e50; -fx-padding: 10;">
+            <Label text="Budget Manager" style="-fx-text-fill: white; -fx-font-size: 20; -fx-font-weight: bold;"/>
+            <HBox spacing="10" HBox.hgrow="ALWAYS" alignment="CENTER_RIGHT">
+                <Button text="Transactions" onAction="#showTransactions" style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
+                <Button text="Budgets" onAction="#showBudgets" style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
+                <Button text="Reminders" onAction="#showReminders" style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
+                <Button text="Reports" onAction="#showReports" style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
+                <Button text="Logout" onAction="#handleLogout" style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
+            </HBox>
+        </HBox>
+    </top>
+
+    <center>
+        <SplitPane dividerPositions="0.5" orientation="HORIZONTAL">
+            <VBox spacing="10">
+                <Label text="Recent Transactions" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+                <TableView fx:id="transactionTable" prefHeight="200">
+                    <columns>
+                        <TableColumn fx:id="typeColumn" text="Type" prefWidth="100"/>
+                        <TableColumn fx:id="categoryColumn" text="Category" prefWidth="150"/>
+                        <TableColumn fx:id="amountColumn" text="Amount" prefWidth="100"/>
+                        <TableColumn fx:id="dateColumn" text="Date" prefWidth="150"/>
+                    </columns>
+                </TableView>
+
+                <Label text="Upcoming Reminders" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+                <ListView fx:id="remindersList" prefHeight="150"/>
+            </VBox>
+
+            <VBox spacing="10">
+                <HBox spacing="20" alignment="CENTER">
+                    <VBox style="-fx-background-color: #ecf0f1; -fx-padding: 10; -fx-background-radius: 5;">
+                        <Label text="Total Income" style="-fx-font-weight: bold;"/>
+                    </VBox>
+                    <VBox style="-fx-background-color: #ecf0f1; -fx-padding: 10; -fx-background-radius: 5;">
+                        <Label text="Total Expense" style="-fx-font-weight: bold;"/>
+                    </VBox>
+                    <VBox style="-fx-background-color: #ecf0f1; -fx-padding: 10; -fx-background-radius: 5;">
+                        <Label text="Balance" style="-fx-font-weight: bold;"/>
+                    </VBox>
+                </HBox>
+
+                <Label text="Spending by Category" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+                <PieChart fx:id="spendingChart" legendVisible="true" labelsVisible="true" prefHeight="200"/>
+
+                <Label text="Current Budgets" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+                <TableView fx:id="budgetTable" prefHeight="150">
+                    <columns>
+                        <TableColumn fx:id="budgetCategoryColumn" text="Category" prefWidth="150"/>
+                        <TableColumn fx:id="limitColumn" text="Limit" prefWidth="100"/>
+                        <TableColumn fx:id="periodColumn" text="Period" prefWidth="100"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </SplitPane>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER" style="-fx-background-color: #ecf0f1; -fx-padding: 5;">
+            <Label text="Budget Manager v1.0" style="-fx-font-style: italic;"/>
+        </HBox>
+    </bottom>
+</BorderPane>
