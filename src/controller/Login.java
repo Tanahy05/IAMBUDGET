@@ -93,7 +93,7 @@ public class Login {
     private void navigateToDashboard(ActionEvent event) {
         try {
             // Replace with your actual dashboard FXML path
-            Parent dashboardPage = FXMLLoader.load(getClass().getResource("ui/dashboard.fxml"));
+            Parent dashboardPage = FXMLLoader.load(getClass().getResource("/ui/dashboard.fxml"));
             Scene dashboardScene = new Scene(dashboardPage);
 
             Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
