@@ -13,7 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-
+import model.SystemManager;
 
 public class Login {
 
@@ -36,9 +36,7 @@ public class Login {
         String username = usernameField.getText();
         String password = passwordField.getText();
 
-        // TODO: Implement actual authentication logic
         int accepted=Auth.login(username, password);
-        // For demonstration, just print entered credentials
         System.out.println("Login attempt with username: " + username);
         if(accepted==0){
 
@@ -56,7 +54,9 @@ public class Login {
             alert.showAndWait();
         }
         else{
+            SystemManager.loginUser(Auth.findUser(username));
             navigateToDashboard(event);
+
         }
 
     }
@@ -93,7 +93,7 @@ public class Login {
     private void navigateToDashboard(ActionEvent event) {
         try {
             // Replace with your actual dashboard FXML path
-            Parent dashboardPage = FXMLLoader.load(getClass().getResource("ui/dashboard.fxml"));
+            Parent dashboardPage = FXMLLoader.load(getClass().getResource("/ui/dashboard.fxml"));
             Scene dashboardScene = new Scene(dashboardPage);
 
             Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
