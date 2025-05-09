@@ -56,12 +56,7 @@ public class Login {
             alert.showAndWait();
         }
         else{
-            // TODO: If login successful, navigate to the main dashboard
-            Alert alert = new Alert(AlertType.CONFIRMATION);
-            alert.setTitle("Login Successful");
-            alert.setContentText("You were successfully logged in, but we don't have a dashboard yet :)");
-            alert.showAndWait();
-            // navigateToDashboard(event);
+            navigateToDashboard(event);
         }
 
     }
@@ -98,7 +93,7 @@ public class Login {
     private void navigateToDashboard(ActionEvent event) {
         try {
             // Replace with your actual dashboard FXML path
-            Parent dashboardPage = FXMLLoader.load(getClass().getResource("/com/budgetmanager/Dashboard.fxml"));
+            Parent dashboardPage = FXMLLoader.load(getClass().getResource("/ui/dashboard.fxml"));
             Scene dashboardScene = new Scene(dashboardPage);
 
             Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
