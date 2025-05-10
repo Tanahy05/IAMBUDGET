@@ -12,7 +12,7 @@
             prefHeight="600.0" prefWidth="900.0">
 
     <top>
-       <fx:include source="NavBar.fxml"></fx:include>
+        <fx:include source="NavBar.fxml"></fx:include>
     </top>
 
     <center>
