@@ -13,12 +13,13 @@
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="controller.IncomeTrackingController"
             prefHeight="600.0" prefWidth="800.0">
-
     <children>
+
         <!-- Main Content Container -->
         <VBox spacing="20.0" AnchorPane.topAnchor="0.0" AnchorPane.rightAnchor="0.0"
               AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
-
+            <fx:include source="NavBar.fxml"></fx:include>
+            <VBox spacing="10" VBox.vgrow="ALWAYS">
             <!-- Header -->
             <HBox alignment="CENTER" style="-fx-background-color: #4CAF50; -fx-padding: 15;">
                 <Label text="Income Tracking" textFill="WHITE">
@@ -107,6 +108,7 @@
                     <Button fx:id="dashboardButton" text="Go to Dashboard" onAction="#handleGoToDashboard"/>
                 </HBox>
             </HBox>
+        </VBox>
         </VBox>
     </children>
 </AnchorPane>

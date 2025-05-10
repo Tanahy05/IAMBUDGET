@@ -116,52 +116,6 @@ public class Dashboard {
         totalExpenseLabel.setText(String.format("$%.2f", totalExpense));
         balanceLabel.setText(String.format("$%.2f", totalIncome - totalExpense));
     }
-
-    // Navigation methods
-    @FXML
-    private void showTransactions() {
-        // Implement transaction view
-    }
-
-    @FXML
-    private void showBudgets(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/BudgetingAnalysis.fxml"));
-            Parent budgetingView = loader.load();
-
-            Stage stage = (Stage)  ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(budgetingView));
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    @FXML
-    private void showReminders() {
-        // Implement reminder view
-    }
-
-    @FXML
-    private void showReports() {
-        // Implement reports view
-    }
-
-    @FXML
-    private void handleLogout(ActionEvent event) {
-        SystemManager.logoutUser();
-        try {
-            Parent homePage = FXMLLoader.load(getClass().getResource("/ui/HomePage.fxml"));
-            Scene homeScene = new Scene(homePage);
-
-            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            window.setScene(homeScene);
-            window.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     // Data classes
     public static class Transaction {
         private final String type;
