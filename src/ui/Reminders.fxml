@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controller.Reminders"
+            prefHeight="400.0" prefWidth="600.0">
+    <children>
+        <VBox spacing="10" AnchorPane.topAnchor="10.0" AnchorPane.leftAnchor="10.0"
+              AnchorPane.rightAnchor="10.0" AnchorPane.bottomAnchor="10.0">
+            <padding>
+                <Insets top="15" right="15" bottom="15" left="15"/>
+            </padding>
+
+            <!-- Header -->
+            <HBox alignment="CENTER">
+                <Text text="Set a Reminder" styleClass="header-text">
+                    <font>
+                        <Font name="System Bold" size="24.0"/>
+                    </font>
+                </Text>
+            </HBox>
+
+            <!-- Reminder Form -->
+            <VBox spacing="10">
+                <Label text="Reminder Name:" />
+                <TextField fx:id="reminderNameField" promptText="e.g., Electricity Bill" />
+
+                <Label text="Amount:" />
+                <TextField fx:id="amountField" promptText="e.g., 100.00" />
+
+                <Label text="Due Date:" />
+                <DatePicker fx:id="dueDatePicker" promptText="Select due date" />
+
+                <Label text="Reminder Time:" />
+                <DatePicker fx:id="reminderDatePicker" promptText="Select reminder time" />
+
+                <HBox spacing="10">
+                    <Button fx:id="saveReminderButton" text="Save Reminder" onAction="#handleSaveReminder" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
+                    <Button fx:id="clearFormButton" text="Clear Form" onAction="#handleClearForm" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
+                </HBox>
+            </VBox>
+        </VBox>
+    </children>
+</AnchorPane>
