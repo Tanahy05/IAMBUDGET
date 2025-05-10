@@ -11,12 +11,14 @@ public class UserDatabase {
     public static ArrayList<User> loadUsers() {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE_PATH))) {
             return (ArrayList<User>) ois.readObject();
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e)
+        {
             return new ArrayList<>();
         }
     }
 
-    public static void saveUsers(ArrayList<User> users) {
+    public static void saveUsers(ArrayList<User> users)
+    {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
             oos.writeObject(users);
         } catch (IOException e) {
@@ -30,7 +32,6 @@ public class UserDatabase {
             if (users.isEmpty()) {
                 return 1;
             }
-            // Get ID of last user and increment
             return users.get(users.size() - 1).getUserID() + 1;
         } catch (IOException | ClassNotFoundException e) {
             return 0;

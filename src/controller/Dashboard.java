@@ -124,10 +124,19 @@ public class Dashboard {
     }
 
     @FXML
-    private void showBudgets() {
-        // Implement budget view
-    }
+    private void showBudgets(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/Budgeting&Analysis.fxml"));
+            Parent budgetingView = loader.load();
 
+            Stage stage = (Stage)  ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(budgetingView));
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     @FXML
     private void showReminders() {
         // Implement reminder view
