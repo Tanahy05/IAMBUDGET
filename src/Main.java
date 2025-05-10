@@ -8,13 +8,10 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // Load the HomePage.fxml as the initial view
-        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("ui/Reminders.fxml"));
 
-        // Create a new scene with the loaded FXML
+        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("ui/HomePage.fxml"));
+
         Scene scene = new Scene(root);
-
-        // Configure and show the primary stage
         primaryStage.setTitle("Budget Manager");
         primaryStage.setScene(scene);
         primaryStage.setResizable(true);
@@ -22,7 +19,7 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-        // Launch the JavaFX application
+
         launch(args);
     }
 }

@@ -17,6 +17,8 @@
     <children>
         <VBox spacing="10" AnchorPane.topAnchor="10.0" AnchorPane.leftAnchor="10.0"
               AnchorPane.rightAnchor="10.0" AnchorPane.bottomAnchor="10.0">
+            <fx:include source="NavBar.fxml"></fx:include>
+            <VBox spacing="10" VBox.vgrow="ALWAYS">
             <padding>
                 <Insets top="15" right="15" bottom="15" left="15"/>
             </padding>
@@ -191,6 +193,7 @@
                 <Button fx:id="exportGoalsButton" text="Export Goals" onAction="#handleExportGoals"/>
                 <Button fx:id="dashboardButton" text="Back to Dashboard" onAction="#handleBackToDashboard"/>
             </HBox>
+        </VBox>
         </VBox>
     </children>
 </AnchorPane>
