@@ -126,7 +126,7 @@ public class Dashboard {
     @FXML
     private void showBudgets(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/Budgeting&Analysis.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/BudgetingAnalysis.fxml"));
             Parent budgetingView = loader.load();
 
             Stage stage = (Stage)  ((Node) event.getSource()).getScene().getWindow();

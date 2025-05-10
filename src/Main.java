@@ -9,7 +9,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         // Load the HomePage.fxml as the initial view
-        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("ui/dashboard.fxml"));
+        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("ui/HomePage.fxml"));
 
         // Create a new scene with the loaded FXML
         Scene scene = new Scene(root);
