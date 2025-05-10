@@ -65,20 +65,22 @@ public class BudgetingAnalysis implements Initializable {
     private List<String> timePeriods = List.of("Daily", "Weekly", "Monthly", "Yearly");
     private List<String> analysisPeriods = List.of("This Week", "This Month", "Last Month", "Last 3 Months", "This Year");
 
-    /**
-     * Initializes the controller
-     */
+    // Budget Tracker reference
+    private BudgetTracker budgetTracker;
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Get the budget tracker from SystemManager
+        budgetTracker = SystemManager.getBudgetTracker();
+
         setupComboBoxes();
         setupTableView();
         setupCharts();
         loadBudgetData();
     }
 
-    /**
-     * Sets up the combo boxes with default values
-     */
+
     private void setupComboBoxes() {
         categoryComboBox.setItems(FXCollections.observableArrayList(defaultCategories));
         timePeriodComboBox.setItems(FXCollections.observableArrayList(timePeriods));
@@ -88,9 +90,7 @@ public class BudgetingAnalysis implements Initializable {
         analysisPeriodComboBox.setValue("This Month"); // Default value
     }
 
-    /**
-     * Sets up the budget table view
-     */
+
     private void setupTableView() {
         // Initialize the budgets list
         budgets = FXCollections.observableArrayList();
@@ -123,9 +123,7 @@ public class BudgetingAnalysis implements Initializable {
         budgetCategoriesTable.setItems(budgets);
     }
 
-    /**
-     * Sets up the charts with initial empty data
-     */
+
     private void setupCharts() {
         // Initial empty data for pie chart
         spendingPieChart.setData(FXCollections.observableArrayList());
@@ -136,29 +134,21 @@ public class BudgetingAnalysis implements Initializable {
         spendingTrendChart.getData().clear();
     }
 
-    /**
-     * Loads budget data from the system
-     */
-    private void loadBudgetData() {
-        // This would typically fetch data from your model/database
-        // For now, we'll add some sample data for demonstration
-        // In a real app, you would get this from SystemManager or a budgetTracker
 
+    private void loadBudgetData() {
         if (SystemManager.isUserLoggedIn()) {
-            // TODO: Get actual budget data from the system
-            // For now, add sample data
-            budgets.add(new Budget("1", "Food", new BigDecimal("300.00"), "Monthly"));
-            budgets.add(new Budget("2", "Housing", new BigDecimal("1200.00"), "Monthly"));
-            budgets.add(new Budget("3", "Transportation", new BigDecimal("150.00"), "Monthly"));
+            // Clear existing budgets
+            budgets.clear();
+
+            // Load budgets from the tracker
+            List<Budget> loadedBudgets = budgetTracker.getBudgets();
+            budgets.addAll(loadedBudgets);
 
             // Update charts with the loaded data
             updateBudgetAnalysis();
         }
     }
 
-    /**
-     * Handles saving a new budget
-     */
     @FXML
     private void handleSaveBudget(ActionEvent event) {
         String category = categoryComboBox.getValue();
@@ -188,9 +178,12 @@ public class BudgetingAnalysis implements Initializable {
             for (Budget existingBudget : budgets) {
                 if (existingBudget.getCategory().equals(category)) {
                     // Update existing budget
-                    // In real app, you would call your budget tracker's edit method
                     existingBudget.setLimit(amount);
                     existingBudget.setPeriod(period);
+
+                    // Update in the tracker
+                    budgetTracker.edit(existingBudget);
+
                     budgetCategoriesTable.refresh();
                     showAlert("Budget updated successfully");
                     updateBudgetAnalysis();
@@ -206,8 +199,11 @@ public class BudgetingAnalysis implements Initializable {
             // Add to UI list
             budgets.add(newBudget);
 
-            // In real app, save to the system via your tracker
-            // budgetTracker.add(newBudget);
+            // Add to the tracker
+            budgetTracker.add(newBudget);
+
+            // Save to persistence
+            SystemManager.saveUserData();
 
             // Update analysis and clear form
             updateBudgetAnalysis();
@@ -220,109 +216,85 @@ public class BudgetingAnalysis implements Initializable {
         }
     }
 
-    /**
-     * Handles deleting a budget
-     */
+
     private void handleDeleteBudget(Budget budget) {
         budgets.remove(budget);
 
-        // In real app, delete from your system/tracker
-        // budgetTracker.delete(budget.getBudgetId());
+        // Delete from the tracker
+        budgetTracker.delete(budget.getBudgetId());
+
+        // Save changes
+        SystemManager.saveUserData();
 
         updateBudgetAnalysis();
         showAlert("Budget deleted successfully");
     }
 
-    /**
-     * Clears the budget form fields
-     */
+
     private void clearBudgetForm() {
         categoryComboBox.setValue(null);
         budgetAmountField.clear();
         timePeriodComboBox.setValue("Monthly");
     }
 
-    /**
-     * Handles changing the analysis period
-     */
+
     @FXML
     private void handleAnalysisPeriodChange(ActionEvent event) {
-        // Update the analysis based on selected period
+
         updateBudgetAnalysis();
     }
 
-    /**
-     * Handles refreshing the analysis
-     */
+
     @FXML
     private void handleRefreshAnalysis(ActionEvent event) {
         updateBudgetAnalysis();
         showAlert("Analysis refreshed");
     }
 
-    /**
-     * Updates the budget analysis data and charts
-     */
+
     private void updateBudgetAnalysis() {
-        // Get selected analysis period
+
         String period = analysisPeriodComboBox.getValue();
 
-        // In a real app, you would fetch spending data for this period
-        // For now, we'll generate sample data
 
-        // Update pie chart with sample data
+
         ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
         for (Budget budget : budgets) {
-            // Simulate actual spending as some percentage of budget
-            double actualPercent = Math.random() * 1.2; // 0% to 120% of budget
+
+            double actualPercent = Math.random() * 1.2;
             BigDecimal actual = budget.getLimit().multiply(new BigDecimal(actualPercent));
             pieChartData.add(new PieChart.Data(budget.getCategory(), actual.doubleValue()));
         }
         spendingPieChart.setData(pieChartData);
 
-        // Update budget vs. actual bar chart
-        // In a real app, this would show budget amount vs actual spending for each category
 
-        // Update spending trend line chart
-        // In a real app, this would show spending over time
-
-        // Update progress bar - ratio of total spending to total budget
-        // For demo, set to random percentage
         budgetProgressBar.setProgress(Math.random());
     }
 
-    /**
-     * Handles exporting the report
-     */
+
     @FXML
     private void handleExportReport(ActionEvent event) {
         // In a real app, this would generate and save a PDF or Excel report
         showAlert("Report export functionality not yet implemented");
     }
 
-    /**
-     * Handles navigating back to dashboard
-     */
+
     @FXML
     private void handleBackToDashboard(ActionEvent event) {
+        try {
+            // Replace with your actual dashboard FXML path
+            Parent dashboardPage = FXMLLoader.load(getClass().getResource("/ui/dashboard.fxml"));
+            Scene dashboardScene = new Scene(dashboardPage);
 
-            try {
-                // Replace with your actual dashboard FXML path
-                Parent dashboardPage = FXMLLoader.load(getClass().getResource("/ui/dashboard.fxml"));
-                Scene dashboardScene = new Scene(dashboardPage);
-
-                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                window.setScene(dashboardScene);
-                window.show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            window.setScene(dashboardScene);
+            window.show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
 
 
-    /**
-     * Shows an alert dialog with the given message
-     */
     private void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Information");

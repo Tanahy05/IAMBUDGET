@@ -12,10 +12,11 @@
           spacing="10">
         <Label text="Budget Manager" style="-fx-text-fill: white; -fx-font-size: 20; -fx-font-weight: bold;"/>
         <Region fx:id="spacer" HBox.hgrow="ALWAYS"/>
-        <Button text="Transactions" onAction="#showTransactions" style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
-        <Button text="Budgets" onAction="#showBudgets" style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
+        <Button text="DahBoard" onAction="#showDashboard" style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
+        <Button text="Add income" onAction="#showIncome" style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
+        <Button text="Add Budgets" onAction="#showBudgets" style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
         <Button text="Reminders" onAction="#showReminders" style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
-        <Button text="Reports" onAction="#showReports" style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
+        <Button text="Expense Tracker" onAction="#showReports" style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
         <Button text="Logout" onAction="#handleLogout" style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
     </HBox>
 </AnchorPane>
