@@ -118,40 +118,7 @@ public class Dashboard {
     }
 
     // Navigation methods
-    @FXML
-    private void showTransactions() {
-        // Implement transaction view
-    }
 
-    @FXML
-    private void showBudgets() {
-        // Implement budget view
-    }
-
-    @FXML
-    private void showReminders() {
-        // Implement reminder view
-    }
-
-    @FXML
-    private void showReports() {
-        // Implement reports view
-    }
-
-    @FXML
-    private void handleLogout(ActionEvent event) {
-        SystemManager.logoutUser();
-        try {
-            Parent homePage = FXMLLoader.load(getClass().getResource("/ui/HomePage.fxml"));
-            Scene homeScene = new Scene(homePage);
-
-            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            window.setScene(homeScene);
-            window.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     // Data classes
     public static class Transaction {
