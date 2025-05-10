@@ -34,4 +34,13 @@ public class Auth {
         return 0;
 
     }
+    public static User findUser(String username) {
+        ArrayList<User> users = UserDatabase.loadUsers();
+        for (User u : users) {
+            if (u.getUsername().equals(username)){
+                return u;
+            }
+        }
+        return null;
+    }
 }
