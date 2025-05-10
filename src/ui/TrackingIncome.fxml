@@ -89,24 +89,13 @@
                     </columns>
                 </TableView>
 
-                <!-- Summary Section -->
-                <HBox alignment="CENTER_RIGHT" spacing="20.0" style="-fx-padding: 10 0 0 0;">
-                    <Label text="Total Income:" style="-fx-font-weight: bold;"/>
-                    <Region>
-                        <padding>
-                            <Insets top="0" right="0" bottom="0" left="0"/>
-                        </padding>
-                    </Region>
 
-                </HBox>
             </VBox>
 
             <!-- Status Bar -->
             <HBox alignment="CENTER_LEFT" style="-fx-background-color: #f0f0f0; -fx-padding: 5 20;">
                 <Label fx:id="statusLabel" text="Ready to add income entries"/>
-                <HBox HBox.hgrow="ALWAYS" alignment="CENTER_RIGHT">
-                    <Button fx:id="dashboardButton" text="Go to Dashboard" onAction="#handleGoToDashboard"/>
-                </HBox>
+
             </HBox>
         </VBox>
         </VBox>
