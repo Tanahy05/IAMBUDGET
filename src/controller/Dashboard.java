@@ -116,10 +116,6 @@ public class Dashboard {
         totalExpenseLabel.setText(String.format("$%.2f", totalExpense));
         balanceLabel.setText(String.format("$%.2f", totalIncome - totalExpense));
     }
-
-    // Navigation methods
-
-
     // Data classes
     public static class Transaction {
         private final String type;
