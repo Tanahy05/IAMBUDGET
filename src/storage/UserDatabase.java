@@ -93,18 +93,4 @@ public class UserDatabase {
         }
     }
 
-
-    public static boolean deleteBudgetData(int userId) {
-        File file = new File(getBudgetFilePath(userId));
-        if (file.exists()) {
-            boolean deleted = file.delete();
-            if (deleted) {
-                System.out.println("Budget data deleted for user ID: " + userId);
-            } else {
-                System.out.println("Failed to delete budget data for user ID: " + userId);
-            }
-            return deleted;
-        }
-        return true; // File didn't exist, nothing to delete
-    }
 }
