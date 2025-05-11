@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.chart.*?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controller.ExpenseTrackerController"
+            prefHeight="600.0" prefWidth="800.0">
+    <children>
+        <VBox spacing="10" AnchorPane.topAnchor="10.0" AnchorPane.leftAnchor="10.0"
+              AnchorPane.rightAnchor="10.0" AnchorPane.bottomAnchor="10.0">
+            <fx:include source="NavBar.fxml"></fx:include>
+            <VBox spacing="10" VBox.vgrow="ALWAYS">
+                <padding>
+                    <Insets top="15" right="15" bottom="15" left="15"/>
+                </padding>
+                <!-- Header -->
+                <HBox alignment="CENTER">
+                    <Text text="Expense Tracker" styleClass="header-text">
+                        <font>
+                            <Font name="System Bold" size="24.0"/>
+                        </font>
+                    </Text>
+                </HBox>
+                <!-- Main Content in a SplitPane -->
+                <SplitPane dividerPositions="0.4" VBox.vgrow="ALWAYS">
+                    <!-- Left Panel - Add Expense Form -->
+                    <VBox spacing="10">
+                        <padding>
+                            <Insets top="10" right="10" bottom="10" left="10"/>
+                        </padding>
+                        <!-- Add Expense Form -->
+                        <TitledPane text="Add/Edit Expense" expanded="true">
+                            <VBox spacing="10">
+                                <padding>
+                                    <Insets top="10" right="10" bottom="10" left="10"/>
+                                </padding>
+                                <Label text="Category:" />
+                                <ComboBox fx:id="categoryComboBox" promptText="Select category" maxWidth="Infinity"/>
+                                <Label text="Amount:" />
+                                <TextField fx:id="expenseAmountField" promptText="e.g., 50.00" />
+                                <Label text="Date:" />
+                                <DatePicker fx:id="expenseDatePicker" promptText="Select date" maxWidth="Infinity"/>
+                                <Label text="Description:" />
+                                <TextField fx:id="expenseDescriptionField" promptText="e.g., Grocery shopping" />
+                                <HBox spacing="10" alignment="CENTER_LEFT">
+                                    <CheckBox fx:id="recurringCheckBox" text="Recurring Expense" />
+                                </HBox>
+                                <Label text="Recurring Frequency:" />
+                                <ComboBox fx:id="recurringFrequencyComboBox" promptText="Select frequency" maxWidth="Infinity"/>
+                                <HBox spacing="10">
+                                    <Button fx:id="addExpenseButton" text="Save Expense" onAction="#handleAddExpense" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
+                                    <Button fx:id="clearFormButton" text="Clear Form" onAction="#handleClearForm" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
+                                </HBox>
+                            </VBox>
+                        </TitledPane>
+                        <!-- Filter Panel -->
+                        <TitledPane text="Filter Expenses" expanded="true">
+                            <VBox spacing="10">
+                                <padding>
+                                    <Insets top="10" right="10" bottom="10" left="10"/>
+                                </padding>
+                                <Label text="Time Range:" />
+                                <ComboBox fx:id="timeRangeComboBox" promptText="Select time range" maxWidth="Infinity"/>
+                                <HBox spacing="10" alignment="CENTER_LEFT">
+                                    <Label text="Start Date:" HBox.hgrow="ALWAYS" />
+                                    <DatePicker fx:id="startDatePicker" promptText="Start date" HBox.hgrow="ALWAYS" />
+                                </HBox>
+                                <HBox spacing="10" alignment="CENTER_LEFT">
+                                    <Label text="End Date:" HBox.hgrow="ALWAYS" />
+                                    <DatePicker fx:id="endDatePicker" promptText="End date" HBox.hgrow="ALWAYS" />
+                                </HBox>
+                                <HBox spacing="10">
+                                    <Button fx:id="applyFilterButton" text="Apply Filter" onAction="#handleApplyFilter" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
+                                </HBox>
+                            </VBox>
+                        </TitledPane>
+                    </VBox>
+
+                    <!-- Right Panel - Table and Charts -->
+                    <VBox spacing="10">
+                        <padding>
+                            <Insets top="10" right="10" bottom="10" left="10"/>
+                        </padding>
+                        <!-- Dashboard Summary -->
+                        <TitledPane text="Summary" expanded="true">
+                            <VBox spacing="10">
+                                <padding>
+                                    <Insets top="10" right="10" bottom="10" left="10"/>
+                                </padding>
+                                <HBox spacing="10" alignment="CENTER_LEFT">
+                                    <Label text="Total Expenses:" />
+                                    <Label fx:id="totalExpensesLabel" text="\$0.00" style="-fx-font-weight: bold;" />
+                                </HBox>
+                            </VBox>
+                        </TitledPane>
+
+                        <!-- Expenses Table -->
+                        <TableView fx:id="expensesTableView" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="categoryColumn" text="Category" prefWidth="100" />
+                                <TableColumn fx:id="amountColumn" text="Amount" prefWidth="80" />
+                                <TableColumn fx:id="dateColumn" text="Date" prefWidth="100" />
+                                <TableColumn fx:id="descriptionColumn" text="Description" prefWidth="150" />
+                                <TableColumn fx:id="recurringColumn" text="Recurring" prefWidth="80" />
+                                <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="120" />
+                            </columns>
+                        </TableView>
+
+                        <!-- Charts in a TabPane -->
+                        <TabPane>
+                            <tabs>
+                                <Tab text="Category Distribution" closable="false">
+                                    <VBox alignment="CENTER">
+                                        <PieChart fx:id="categoryPieChart" title="Expenses by Category" />
+                                    </VBox>
+                                </Tab>
+
+                            </tabs>
+                        </TabPane>
+                    </VBox>
+                </SplitPane>
+            </VBox>
+        </VBox>
+    </children>
+</AnchorPane>
