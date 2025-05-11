@@ -12,10 +12,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.PieChart;
 import javafx.stage.Stage;
+import model.Budget;
 import model.Reminder;
 import model.SystemManager;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,10 +31,10 @@ public class Dashboard {
     @FXML private TableColumn<Transaction, Double> amountColumn;
     @FXML private TableColumn<Transaction, LocalDate> dateColumn;
 
-    @FXML private TableView<Budget> budgetTable;
-    @FXML private TableColumn<Budget, String> budgetCategoryColumn;
-    @FXML private TableColumn<Budget, Double> limitColumn;
-    @FXML private TableColumn<Budget, String> periodColumn;
+    @FXML private TableView<BudgetViewModel> budgetTable;
+    @FXML private TableColumn<BudgetViewModel, String> budgetCategoryColumn;
+    @FXML private TableColumn<BudgetViewModel, BigDecimal> limitColumn;
+    @FXML private TableColumn<BudgetViewModel, String> periodColumn;
 
     @FXML private ListView<DisplayReminder> remindersList;
     @FXML private PieChart spendingChart;
@@ -40,8 +42,13 @@ public class Dashboard {
     @FXML private Label totalExpenseLabel;
     @FXML private Label balanceLabel;
 
+    private BudgetTracker budgetTracker;
+
     @FXML
     public void initialize() {
+        // Get the budget tracker instance
+        budgetTracker = SystemManager.getBudgetTracker();
+
         // Initialize only if components are not null
         if (transactionTable != null) {
             initializeTransactionTable();
@@ -50,13 +57,22 @@ public class Dashboard {
             initializeBudgetTable();
         }
 
-        loadSampleData();
-        loadReminders(); // Load actual reminders
+        // Load sample transaction data (since you didn't provide transaction tracker code)
+        loadSampleTransactionData();
+
+        // Load actual budget data
+        loadActualBudgetData();
+
+        // Load actual reminders
+        loadReminders();
 
         // Only update summary if labels exist
         if (totalIncomeLabel != null && totalExpenseLabel != null && balanceLabel != null) {
             updateSummary();
         }
+
+        // Update spending chart with actual budget data
+        updateSpendingChart();
     }
 
     private void initializeTransactionTable() {
@@ -72,29 +88,58 @@ public class Dashboard {
         periodColumn.setCellValueFactory(new PropertyValueFactory<>("period"));
     }
 
-    private void loadSampleData() {
-        // Sample transactions
+    private void loadSampleTransactionData() {
+        // Sample transactions (replace with actual transaction data when available)
         ObservableList<Transaction> transactions = FXCollections.observableArrayList(
                 new Transaction("Expense", "Food", 25.50, LocalDate.now()),
                 new Transaction("Income", "Salary", 2000.00, LocalDate.now()),
                 new Transaction("Expense", "Transport", 15.75, LocalDate.now())
         );
         transactionTable.setItems(transactions);
+    }
 
-        // Sample budgets
-        ObservableList<Budget> budgets = FXCollections.observableArrayList(
-                new Budget("Food", 300.00, "Monthly"),
-                new Budget("Transport", 150.00, "Monthly"),
-                new Budget("Entertainment", 100.00, "Monthly")
-        );
-        budgetTable.setItems(budgets);
+    private void loadActualBudgetData() {
+        if (budgetTable == null || !SystemManager.isUserLoggedIn()) {
+            return;
+        }
 
-        // Sample pie chart data
-        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList(
-                new PieChart.Data("Food", 25.50),
-                new PieChart.Data("Transport", 15.75),
-                new PieChart.Data("Entertainment", 0)
-        );
+        // Convert the model Budget objects to BudgetViewModel objects for display
+        List<model.Budget> actualBudgets = budgetTracker.getBudgets();
+
+        ObservableList<BudgetViewModel> budgetViewModels = FXCollections.observableArrayList();
+
+        for (model.Budget budget : actualBudgets) {
+            budgetViewModels.add(new BudgetViewModel(
+                    budget.getCategory(),
+                    budget.getLimit(),
+                    budget.getPeriod()
+            ));
+        }
+
+        budgetTable.setItems(budgetViewModels);
+
+        // Log the count of budgets loaded
+        System.out.println("Loaded " + budgetViewModels.size() + " budgets for dashboard display");
+    }
+
+    private void updateSpendingChart() {
+        if (spendingChart == null || !SystemManager.isUserLoggedIn()) {
+            return;
+        }
+
+        // Get actual budgets
+        List<model.Budget> actualBudgets = budgetTracker.getBudgets();
+        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+
+        for (model.Budget budget : actualBudgets) {
+            // You might want to use actual expense data instead of the budget limit
+            // This is just a placeholder to show the categories
+            pieChartData.add(new PieChart.Data(
+                    budget.getCategory(),
+                    budget.getLimit().doubleValue()
+            ));
+        }
+
         spendingChart.setData(pieChartData);
     }
 
@@ -185,12 +230,15 @@ public class Dashboard {
         public LocalDate getDate() { return date; }
     }
 
-    public static class Budget {
+    /**
+     * View Model class for Budgets in the UI
+     */
+    public static class BudgetViewModel {
         private final String category;
-        private final double limit;
+        private final BigDecimal limit;
         private final String period;
 
-        public Budget(String category, double limit, String period) {
+        public BudgetViewModel(String category, BigDecimal limit, String period) {
             this.category = category;
             this.limit = limit;
             this.period = period;
@@ -198,7 +246,7 @@ public class Dashboard {
 
         // Getters
         public String getCategory() { return category; }
-        public double getLimit() { return limit; }
+        public BigDecimal getLimit() { return limit; }
         public String getPeriod() { return period; }
     }
 
