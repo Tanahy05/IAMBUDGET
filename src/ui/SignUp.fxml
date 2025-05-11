@@ -23,7 +23,7 @@
                         <Font name="System Bold" size="24.0" />
                     </font>
                 </Label>
-                <Label text="Get started with Budget Manager" textAlignment="CENTER">
+                <Label text="Get started with I AM BUDGET" textAlignment="CENTER">
                     <font>
                         <Font size="14.0" />
                     </font>
@@ -84,7 +84,7 @@
                         </PasswordField>
                     </children>
                 </VBox>
-                <Button fx:id="signupButton" onAction="#handleSignup" defaultButton="true" mnemonicParsing="false"  prefHeight="40.0" prefWidth="300.0" style="-fx-background-color: #2196F3; -fx-text-fill: white;" text="Sign Up">
+                <Button fx:id="signupButton" onAction="#handleSignup" defaultButton="true" mnemonicParsing="false"  prefHeight="40.0" prefWidth="300.0" style="-fx-background-color: #000000; -fx-text-fill: white;" text="Sign Up">
                     <font>
                         <Font size="14.0" />
                     </font>

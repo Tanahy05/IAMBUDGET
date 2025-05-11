@@ -10,7 +10,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("ui/HomePage.fxml"));
         Scene scene = new Scene(root);
-        primaryStage.setTitle("Budget Manager");
+        primaryStage.setTitle("I AM BUDGET");
         primaryStage.setScene(scene);
         primaryStage.setResizable(true);
         primaryStage.show();
