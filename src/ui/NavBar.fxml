@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controller.NavBar"
+            prefHeight="50.0">
+
+    <HBox style="-fx-background-color: #000000; -fx-padding: 10;"
+          AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
+          spacing="10">
+
+        <ImageView fitHeight="30" preserveRatio="true">
+            <image>
+                <Image url="@/Assets/I AM BUDGET YEAT .png" />
+            </image>
+        </ImageView>
+
+        <Region fx:id="spacer" HBox.hgrow="ALWAYS"/>
+
+        <Button text="DashBoard" onAction="#showDashboard" style="-fx-background-color: white; -fx-text-fill: black;"/>
+        <Button text="Add income" onAction="#showIncome" style="-fx-background-color: white; -fx-text-fill: black;"/>
+        <Button text="Add Budgets" onAction="#showBudgets" style="-fx-background-color: white; -fx-text-fill: black;"/>
+        <Button text="Reminders" onAction="#showReminders" style="-fx-background-color: white; -fx-text-fill: black;"/>
+        <Button text="Expense Tracker" onAction="#showExpense" style="-fx-background-color: white; -fx-text-fill: black;"/>
+        <Button text="Logout" onAction="#handleLogout" style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
+
+
+    </HBox>
+</AnchorPane>

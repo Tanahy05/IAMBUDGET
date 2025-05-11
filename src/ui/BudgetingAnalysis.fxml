@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controller.BudgetingAnalysis"
+            prefHeight="600.0" prefWidth="800.0">
+    <children>
+        <VBox spacing="5" AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="5.0"
+              AnchorPane.rightAnchor="5.0" AnchorPane.bottomAnchor="5.0">
+            <fx:include source="NavBar.fxml"/>
+
+            <VBox spacing="5" VBox.vgrow="ALWAYS">
+                <!-- Header -->
+                <HBox alignment="TOP_LEFT">
+                    <Text text="Budget &amp; Spending Analysis" styleClass="header-text">
+                        <font>
+                            <Font name="System Bold" size="20.0"/>
+                        </font>
+                    </Text>
+                </HBox>
+
+                <!-- Main Content in a SplitPane -->
+                <SplitPane dividerPositions="0.5" VBox.vgrow="ALWAYS">
+                    <!-- Left Panel - Budget Setting -->
+                    <VBox spacing="5">
+                        <Label text="Set Budget Categories" styleClass="section-header">
+                            <font>
+                                <Font name="System Bold" size="14.0"/>
+                            </font>
+                        </Label>
+
+                        <GridPane hgap="5" vgap="5">
+                            <Label text="Category:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                            <ComboBox fx:id="categoryComboBox" promptText="Select Category"
+                                      GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                            <Label text="Budget Amount:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                            <TextField fx:id="budgetAmountField" promptText="0.00"
+                                       GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                            <Label text="Time Period:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                            <ComboBox fx:id="timePeriodComboBox" promptText="Monthly"
+                                      GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                            <Button fx:id="saveBudgetButton" text="Save Budget"
+                                    onAction="#handleSaveBudget"
+                                    GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+                            <columnConstraints>
+                                <ColumnConstraints percentWidth="40"/>
+                                <ColumnConstraints percentWidth="60"/>
+                            </columnConstraints>
+                        </GridPane>
+
+                        <Label text="Your Budget Categories" styleClass="section-header">
+                            <font>
+                                <Font name="System Bold" size="14.0"/>
+                            </font>
+                        </Label>
+
+                        <TableView fx:id="budgetCategoriesTable" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="categoryNameColumn" text="Category"/>
+                                <TableColumn fx:id="budgetAmountColumn" text="Budget Amount"/>
+                                <TableColumn fx:id="timePeriodColumn" text="Period"/>
+                                <TableColumn fx:id="actionsColumn" text="Actions"/>
+                            </columns>
+                        </TableView>
+                    </VBox>
+
+                    <!-- Right Panel - Spending Analysis -->
+                    <VBox spacing="3">
+                        <Label text="Spending Analysis" styleClass="section-header">
+                            <font>
+                                <Font name="System Bold" size="14.0"/>
+                            </font>
+                        </Label>
+
+                        <HBox spacing="5" alignment="CENTER_LEFT">
+                            <Label text="Period:"/>
+                            <ComboBox fx:id="analysisPeriodComboBox" promptText="This Month"
+                                      onAction="#handleAnalysisPeriodChange"/>
+                        </HBox>
+
+                        <TabPane fx:id="chartTabPane" VBox.vgrow="ALWAYS">
+                            <Tab text="Spending by Category" closable="false">
+                                <PieChart fx:id="spendingPieChart"/>
+                            </Tab>
+                        </TabPane>
+                    </VBox>
+                </SplitPane>
+
+                <!-- Bottom Action Buttons -->
+                <HBox spacing="5" alignment="CENTER_LEFT">
+                    <Button fx:id="exportButton" text="Export Report" onAction="#handleExportReport"/>
+                    <Button fx:id="dashboardButton" text="Back to Dashboard" onAction="#handleBackToDashboard"/>
+                </HBox>
+            </VBox>
+        </VBox>
+    </children>
+</AnchorPane>

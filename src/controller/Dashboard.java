@@ -12,10 +12,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.PieChart;
 import javafx.stage.Stage;
-import model.SystemManager;
+import model.*;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Dashboard {
 
@@ -26,19 +29,24 @@ public class Dashboard {
     @FXML private TableColumn<Transaction, Double> amountColumn;
     @FXML private TableColumn<Transaction, LocalDate> dateColumn;
 
-    @FXML private TableView<Budget> budgetTable;
-    @FXML private TableColumn<Budget, String> budgetCategoryColumn;
-    @FXML private TableColumn<Budget, Double> limitColumn;
-    @FXML private TableColumn<Budget, String> periodColumn;
+    @FXML private TableView<BudgetViewModel> budgetTable;
+    @FXML private TableColumn<BudgetViewModel, String> budgetCategoryColumn;
+    @FXML private TableColumn<BudgetViewModel, BigDecimal> limitColumn;
+    @FXML private TableColumn<BudgetViewModel, String> periodColumn;
 
-    @FXML private ListView<Reminder> remindersList;
+    @FXML private ListView<DisplayReminder> remindersList;
     @FXML private PieChart spendingChart;
     @FXML private Label totalIncomeLabel;
     @FXML private Label totalExpenseLabel;
     @FXML private Label balanceLabel;
 
+    private BudgetTracker budgetTracker;
+
     @FXML
     public void initialize() {
+        // Get the budget tracker instance
+        budgetTracker = SystemManager.getBudgetTracker();
+
         // Initialize only if components are not null
         if (transactionTable != null) {
             initializeTransactionTable();
@@ -47,12 +55,22 @@ public class Dashboard {
             initializeBudgetTable();
         }
 
-        loadSampleData();
+        // Load sample transaction data (since you didn't provide transaction tracker code)
+        loadSampleTransactionData();
+
+        // Load actual budget data
+        loadActualBudgetData();
+
+        // Load actual reminders
+        loadReminders();
 
         // Only update summary if labels exist
         if (totalIncomeLabel != null && totalExpenseLabel != null && balanceLabel != null) {
             updateSummary();
         }
+
+        // Update spending chart with actual budget data
+        updateSpendingChart();
     }
 
     private void initializeTransactionTable() {
@@ -68,37 +86,140 @@ public class Dashboard {
         periodColumn.setCellValueFactory(new PropertyValueFactory<>("period"));
     }
 
-    private void loadSampleData() {
-        // Sample transactions
-        ObservableList<Transaction> transactions = FXCollections.observableArrayList(
-                new Transaction("Expense", "Food", 25.50, LocalDate.now()),
-                new Transaction("Income", "Salary", 2000.00, LocalDate.now()),
-                new Transaction("Expense", "Transport", 15.75, LocalDate.now())
-        );
-        transactionTable.setItems(transactions);
+    private void loadSampleTransactionData() {
+        if (transactionTable == null || !SystemManager.isUserLoggedIn()) {
+            return;
+        }
 
-        // Sample budgets
-        ObservableList<Budget> budgets = FXCollections.observableArrayList(
-                new Budget("Food", 300.00, "Monthly"),
-                new Budget("Transport", 150.00, "Monthly"),
-                new Budget("Entertainment", 100.00, "Monthly")
-        );
-        budgetTable.setItems(budgets);
+        // Get the actual expenses and incomes
+        List<Expense> actualExpenses = ExpenseTracker.getInstance().getExpenses();
+        List<Income> actualIncomes = IncomeTracker.getInstance().getUserIncome(SystemManager.getCurrentUser().getUserID());
 
-        // Sample reminders
-        ObservableList<Reminder> reminders = FXCollections.observableArrayList(
-                new Reminder("Rent Payment", LocalDate.now().plusDays(3), true),
-                new Reminder("Electric Bill", LocalDate.now().plusDays(7), false)
-        );
-        remindersList.setItems(reminders);
+        ObservableList<Transaction> transactionList = FXCollections.observableArrayList();
 
-        // Sample pie chart data
-        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList(
-                new PieChart.Data("Food", 25.50),
-                new PieChart.Data("Transport", 15.75),
-                new PieChart.Data("Entertainment", 0)
-        );
+        // Add last 5 incomes to the transaction list
+        int incomeSize = actualIncomes.size();
+        int incomeStart = Math.max(0, incomeSize - 5);
+        for (int i = incomeStart; i < incomeSize; i++) {
+            Income income = actualIncomes.get(i);
+            transactionList.add(new Transaction(
+                    "Income", // Type of transaction
+                    income.getSource(), // Category
+                    income.getAmount().doubleValue(), // Amount (convert to double if it's BigDecimal)
+                    income.getDate() // Date
+            ));
+        }
+
+        // Add last 5 expenses to the transaction list
+        int expenseSize = actualExpenses.size();
+        int expenseStart = Math.max(0, expenseSize - 5);
+        for (int i = expenseStart; i < expenseSize; i++) {
+            Expense expense = actualExpenses.get(i);
+            transactionList.add(new Transaction(
+                    "Expense", // Type of transaction
+                    expense.getCategory(), // Category
+                    expense.getAmount(), // Amount (convert to double if it's BigDecimal)
+                    expense.getDate() // Date
+            ));
+        }
+
+        // Set the transaction data into the table
+        transactionTable.setItems(transactionList);
+    }
+
+    private void loadActualBudgetData() {
+        if (budgetTable == null || !SystemManager.isUserLoggedIn()) {
+            return;
+        }
+
+        // Convert the model Budget objects to BudgetViewModel objects for display
+        List<model.Budget> actualBudgets = budgetTracker.getBudgets();
+
+        ObservableList<BudgetViewModel> budgetViewModels = FXCollections.observableArrayList();
+
+        for (model.Budget budget : actualBudgets) {
+            budgetViewModels.add(new BudgetViewModel(
+                    budget.getCategory(),
+                    budget.getLimit(),
+                    budget.getPeriod()
+            ));
+        }
+
+        budgetTable.setItems(budgetViewModels);
+
+        // Log the count of budgets loaded
+        System.out.println("Loaded " + budgetViewModels.size() + " budgets for dashboard display");
+    }
+
+    private void updateSpendingChart() {
+        if (spendingChart == null || !SystemManager.isUserLoggedIn()) {
+            return;
+        }
+
+        // Get actual budgets
+        List<model.Budget> actualBudgets = budgetTracker.getBudgets();
+        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+
+        for (model.Budget budget : actualBudgets) {
+            // You might want to use actual expense data instead of the budget limit
+            // This is just a placeholder to show the categories
+            pieChartData.add(new PieChart.Data(
+                    budget.getCategory(),
+                    budget.getLimit().doubleValue()
+            ));
+        }
+
         spendingChart.setData(pieChartData);
+    }
+
+    /**
+     * Load reminders from the ReminderTracker for the current user
+     */
+    private void loadReminders() {
+        if (remindersList == null || !SystemManager.isUserLoggedIn()) {
+            return;
+        }
+
+        int userId = SystemManager.getCurrentUser().getUserID();
+        ReminderTracker reminderTracker = SystemManager.getReminderTracker();
+        List<Reminder> userReminders = reminderTracker.getUserReminders(userId);
+
+        // Convert Reminder model objects to DisplayReminder for UI display
+        ObservableList<DisplayReminder> displayReminders = FXCollections.observableArrayList(
+                userReminders.stream()
+                        .filter(r -> !r.isCompleted()) // Only show incomplete reminders
+                        .map(r -> new DisplayReminder(
+                                r.getName(),
+                                r.getDueDate(),
+                                r.getAmount(),
+                                r.getReminderId()))
+                        .collect(Collectors.toList())
+        );
+
+        remindersList.setItems(displayReminders);
+
+        // Add double-click handler to mark reminders as completed
+        remindersList.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) { // Double click
+                DisplayReminder selectedReminder = remindersList.getSelectionModel().getSelectedItem();
+                if (selectedReminder != null) {
+                    // Ask for confirmation
+                    Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+                    confirmation.setTitle("Complete Reminder");
+                    confirmation.setHeaderText("Mark as Complete");
+                    confirmation.setContentText("Do you want to mark this reminder as completed?");
+
+                    confirmation.showAndWait().ifPresent(response -> {
+                        if (response == ButtonType.OK) {
+                            if (reminderTracker.markReminderCompleted(selectedReminder.getId(), userId)) {
+                                // Refresh the list
+                                loadReminders();
+                            }
+                        }
+                    });
+                }
+            }
+        });
     }
 
     private void updateSummary() {
@@ -115,42 +236,6 @@ public class Dashboard {
         totalIncomeLabel.setText(String.format("$%.2f", totalIncome));
         totalExpenseLabel.setText(String.format("$%.2f", totalExpense));
         balanceLabel.setText(String.format("$%.2f", totalIncome - totalExpense));
-    }
-
-    // Navigation methods
-    @FXML
-    private void showTransactions() {
-        // Implement transaction view
-    }
-
-    @FXML
-    private void showBudgets() {
-        // Implement budget view
-    }
-
-    @FXML
-    private void showReminders() {
-        // Implement reminder view
-    }
-
-    @FXML
-    private void showReports() {
-        // Implement reports view
-    }
-
-    @FXML
-    private void handleLogout(ActionEvent event) {
-        SystemManager.logoutUser();
-        try {
-            Parent homePage = FXMLLoader.load(getClass().getResource("/ui/HomePage.fxml"));
-            Scene homeScene = new Scene(homePage);
-
-            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            window.setScene(homeScene);
-            window.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     // Data classes
@@ -174,12 +259,15 @@ public class Dashboard {
         public LocalDate getDate() { return date; }
     }
 
-    public static class Budget {
+    /**
+     * View Model class for Budgets in the UI
+     */
+    public static class BudgetViewModel {
         private final String category;
-        private final double limit;
+        private final BigDecimal limit;
         private final String period;
 
-        public Budget(String category, double limit, String period) {
+        public BudgetViewModel(String category, BigDecimal limit, String period) {
             this.category = category;
             this.limit = limit;
             this.period = period;
@@ -187,24 +275,33 @@ public class Dashboard {
 
         // Getters
         public String getCategory() { return category; }
-        public double getLimit() { return limit; }
+        public BigDecimal getLimit() { return limit; }
         public String getPeriod() { return period; }
     }
 
-    public static class Reminder {
+    /**
+     * DisplayReminder class for showing reminders in the UI
+     */
+    public static class DisplayReminder {
         private final String name;
         private final LocalDate dueDate;
-        private final boolean recurring;
+        private final double amount;
+        private final int id;
 
-        public Reminder(String name, LocalDate dueDate, boolean recurring) {
+        public DisplayReminder(String name, LocalDate dueDate, double amount, int id) {
             this.name = name;
             this.dueDate = dueDate;
-            this.recurring = recurring;
+            this.amount = amount;
+            this.id = id;
+        }
+
+        public int getId() {
+            return id;
         }
 
         @Override
         public String toString() {
-            return name + " - Due: " + dueDate.toString() + (recurring ? " (Recurring)" : "");
+            return name + " - $" + String.format("%.2f", amount) + " - Due: " + dueDate.toString();
         }
     }
 }

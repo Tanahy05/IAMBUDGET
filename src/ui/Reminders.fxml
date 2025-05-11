@@ -16,6 +16,8 @@
     <children>
         <VBox spacing="10" AnchorPane.topAnchor="10.0" AnchorPane.leftAnchor="10.0"
               AnchorPane.rightAnchor="10.0" AnchorPane.bottomAnchor="10.0">
+            <fx:include source="NavBar.fxml"></fx:include>
+            <VBox spacing="10" VBox.vgrow="ALWAYS">
             <padding>
                 <Insets top="15" right="15" bottom="15" left="15"/>
             </padding>
@@ -48,6 +50,7 @@
                     <Button fx:id="clearFormButton" text="Clear Form" onAction="#handleClearForm" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
                 </HBox>
             </VBox>
+        </VBox>
         </VBox>
     </children>
 </AnchorPane>

@@ -13,22 +13,23 @@
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="controller.IncomeTrackingController"
             prefHeight="600.0" prefWidth="800.0">
-
     <children>
+
         <!-- Main Content Container -->
         <VBox spacing="20.0" AnchorPane.topAnchor="0.0" AnchorPane.rightAnchor="0.0"
               AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
-
+            <fx:include source="NavBar.fxml"></fx:include>
+            <VBox spacing="10" VBox.vgrow="ALWAYS">
             <!-- Header -->
-            <HBox alignment="CENTER" style="-fx-background-color: #4CAF50; -fx-padding: 15;">
-                <Label text="Income Tracking" textFill="WHITE">
-                    <font>
-                        <Font name="System Bold" size="24.0"/>
-                    </font>
-                </Label>
-            </HBox>
+                <HBox alignment="CENTER" style="-fx-padding: 15;">
+                    <Label text="Income Tracker" style="-fx-text-fill: black;">
+                        <font>
+                            <Font name="System Bold" size="24.0"/>
+                        </font>
+                    </Label>
+                </HBox>
 
-            <!-- Form Section -->
+                <!-- Form Section -->
             <VBox spacing="15.0" style="-fx-padding: 20;">
                 <Label text="Add Income" style="-fx-font-weight: bold; -fx-font-size: 18;">
                 </Label>
@@ -66,7 +67,7 @@
 
                 <!-- Action Buttons -->
                 <HBox spacing="10.0" alignment="CENTER_LEFT" style="-fx-padding: 10 0 0 0;">
-                    <Button fx:id="saveButton" text="Save Income" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"
+                    <Button fx:id="saveButton" text="Save Income" style="-fx-background-color: #000000; -fx-text-fill: white;"
                             onAction="#handleSaveIncome"/>
                     <Button fx:id="clearButton" text="Clear Form" style="-fx-background-color: #f0f0f0;"
                             onAction="#handleClearForm"/>
@@ -88,25 +89,15 @@
                     </columns>
                 </TableView>
 
-                <!-- Summary Section -->
-                <HBox alignment="CENTER_RIGHT" spacing="20.0" style="-fx-padding: 10 0 0 0;">
-                    <Label text="Total Income:" style="-fx-font-weight: bold;"/>
-                    <Region>
-                        <padding>
-                            <Insets top="0" right="0" bottom="0" left="0"/>
-                        </padding>
-                    </Region>
 
-                </HBox>
             </VBox>
 
             <!-- Status Bar -->
             <HBox alignment="CENTER_LEFT" style="-fx-background-color: #f0f0f0; -fx-padding: 5 20;">
                 <Label fx:id="statusLabel" text="Ready to add income entries"/>
-                <HBox HBox.hgrow="ALWAYS" alignment="CENTER_RIGHT">
-                    <Button fx:id="dashboardButton" text="Go to Dashboard" onAction="#handleGoToDashboard"/>
-                </HBox>
+
             </HBox>
+        </VBox>
         </VBox>
     </children>
 </AnchorPane>
