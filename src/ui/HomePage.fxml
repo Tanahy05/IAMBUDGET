@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="500.0" prefWidth="700.0" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.HomePage">
+<AnchorPane prefHeight="500.0" prefWidth="700.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.HomePage">
     <children>
         <VBox alignment="CENTER" spacing="30.0"
               AnchorPane.topAnchor="100.0" AnchorPane.bottomAnchor="100.0"
@@ -17,11 +17,11 @@
             <children>
                 <ImageView fitHeight="100.0" preserveRatio="true">
                     <image>
-                        <Image url="@/Assets/I AM BUDGET YEAT .png"/>
+                        <Image url="@/Assets/I AM BUDGET.png"/>
                     </image>
                 </ImageView>
 
-                <Label text="Take control of your finances" textAlignment="CENTER" style="-fx-text-fill: white;">
+                <Label text="Take control of your finances" textAlignment="CENTER" style="-fx-text-fill: black;">
                     <font>
                         <Font size="18.0"/>
                     </font>
@@ -29,7 +29,7 @@
 
                 <Button fx:id="loginButton" text="Login" onAction="#navigateToLogin"
                         prefHeight="50.0" prefWidth="200.0"
-                        style="-fx-background-color: white; -fx-text-fill: black;">
+                        style="-fx-background-color: black; -fx-text-fill: white;">
                     <font>
                         <Font size="18.0"/>
                     </font>
@@ -37,7 +37,7 @@
 
                 <Button fx:id="signupButton" text="Sign Up" onAction="#navigateToSignup"
                         prefHeight="50.0" prefWidth="200.0"
-                        style="-fx-background-color: white; -fx-text-fill: black;">
+                        style="-fx-background-color: black; -fx-text-fill: white;">
                     <font>
                         <Font size="18.0"/>
                     </font>
@@ -49,7 +49,7 @@
         </VBox>
 
         <Label layoutX="14.0" layoutY="469.0" text="© 2025 I AM BUDGET"
-               style="-fx-text-fill: white;"
+               style="-fx-text-fill: black;"
                AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0"/>
     </children>
 </AnchorPane>
