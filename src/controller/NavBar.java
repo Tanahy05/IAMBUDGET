@@ -69,8 +69,17 @@ public class NavBar {
     }
 
     @FXML
-    private void showReports() {
-        // Implement reports view
+    private void showExpense(ActionEvent event) {
+        try {
+            Parent homePage = FXMLLoader.load(getClass().getResource("/ui/ExpenseTracker.fxml"));
+            Scene homeScene = new Scene(homePage);
+
+            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            window.setScene(homeScene);
+            window.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML

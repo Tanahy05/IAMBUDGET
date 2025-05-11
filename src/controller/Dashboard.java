@@ -12,10 +12,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.PieChart;
 import javafx.stage.Stage;
+import model.Reminder;
 import model.SystemManager;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Dashboard {
 
@@ -31,7 +34,7 @@ public class Dashboard {
     @FXML private TableColumn<Budget, Double> limitColumn;
     @FXML private TableColumn<Budget, String> periodColumn;
 
-    @FXML private ListView<Reminder> remindersList;
+    @FXML private ListView<DisplayReminder> remindersList;
     @FXML private PieChart spendingChart;
     @FXML private Label totalIncomeLabel;
     @FXML private Label totalExpenseLabel;
@@ -48,6 +51,7 @@ public class Dashboard {
         }
 
         loadSampleData();
+        loadReminders(); // Load actual reminders
 
         // Only update summary if labels exist
         if (totalIncomeLabel != null && totalExpenseLabel != null && balanceLabel != null) {
@@ -85,13 +89,6 @@ public class Dashboard {
         );
         budgetTable.setItems(budgets);
 
-        // Sample reminders
-        ObservableList<Reminder> reminders = FXCollections.observableArrayList(
-                new Reminder("Rent Payment", LocalDate.now().plusDays(3), true),
-                new Reminder("Electric Bill", LocalDate.now().plusDays(7), false)
-        );
-        remindersList.setItems(reminders);
-
         // Sample pie chart data
         ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList(
                 new PieChart.Data("Food", 25.50),
@@ -99,6 +96,56 @@ public class Dashboard {
                 new PieChart.Data("Entertainment", 0)
         );
         spendingChart.setData(pieChartData);
+    }
+
+    /**
+     * Load reminders from the ReminderTracker for the current user
+     */
+    private void loadReminders() {
+        if (remindersList == null || !SystemManager.isUserLoggedIn()) {
+            return;
+        }
+
+        int userId = SystemManager.getCurrentUser().getUserID();
+        ReminderTracker reminderTracker = SystemManager.getReminderTracker();
+        List<Reminder> userReminders = reminderTracker.getUserReminders(userId);
+
+        // Convert Reminder model objects to DisplayReminder for UI display
+        ObservableList<DisplayReminder> displayReminders = FXCollections.observableArrayList(
+                userReminders.stream()
+                        .filter(r -> !r.isCompleted()) // Only show incomplete reminders
+                        .map(r -> new DisplayReminder(
+                                r.getName(),
+                                r.getDueDate(),
+                                r.getAmount(),
+                                r.getReminderId()))
+                        .collect(Collectors.toList())
+        );
+
+        remindersList.setItems(displayReminders);
+
+        // Add double-click handler to mark reminders as completed
+        remindersList.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) { // Double click
+                DisplayReminder selectedReminder = remindersList.getSelectionModel().getSelectedItem();
+                if (selectedReminder != null) {
+                    // Ask for confirmation
+                    Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+                    confirmation.setTitle("Complete Reminder");
+                    confirmation.setHeaderText("Mark as Complete");
+                    confirmation.setContentText("Do you want to mark this reminder as completed?");
+
+                    confirmation.showAndWait().ifPresent(response -> {
+                        if (response == ButtonType.OK) {
+                            if (reminderTracker.markReminderCompleted(selectedReminder.getId(), userId)) {
+                                // Refresh the list
+                                loadReminders();
+                            }
+                        }
+                    });
+                }
+            }
+        });
     }
 
     private void updateSummary() {
@@ -116,6 +163,7 @@ public class Dashboard {
         totalExpenseLabel.setText(String.format("$%.2f", totalExpense));
         balanceLabel.setText(String.format("$%.2f", totalIncome - totalExpense));
     }
+
     // Data classes
     public static class Transaction {
         private final String type;
@@ -154,20 +202,29 @@ public class Dashboard {
         public String getPeriod() { return period; }
     }
 
-    public static class Reminder {
+    /**
+     * DisplayReminder class for showing reminders in the UI
+     */
+    public static class DisplayReminder {
         private final String name;
         private final LocalDate dueDate;
-        private final boolean recurring;
+        private final double amount;
+        private final int id;
 
-        public Reminder(String name, LocalDate dueDate, boolean recurring) {
+        public DisplayReminder(String name, LocalDate dueDate, double amount, int id) {
             this.name = name;
             this.dueDate = dueDate;
-            this.recurring = recurring;
+            this.amount = amount;
+            this.id = id;
+        }
+
+        public int getId() {
+            return id;
         }
 
         @Override
         public String toString() {
-            return name + " - Due: " + dueDate.toString() + (recurring ? " (Recurring)" : "");
+            return name + " - $" + String.format("%.2f", amount) + " - Due: " + dueDate.toString();
         }
     }
 }

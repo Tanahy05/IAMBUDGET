@@ -8,7 +8,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("ui/dashboard.fxml"));
+        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("ui/HomePage.fxml"));
         Scene scene = new Scene(root);
         primaryStage.setTitle("Budget Manager");
         primaryStage.setScene(scene);
