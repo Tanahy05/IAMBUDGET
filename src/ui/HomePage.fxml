@@ -1,41 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<?import javafx.geometry.Insets?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.HomePage">
+<AnchorPane prefHeight="500.0" prefWidth="700.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.HomePage">
     <children>
-        <VBox alignment="CENTER" layoutX="150.0" layoutY="100.0" prefHeight="300.0" prefWidth="400.0" spacing="30.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="100.0">
+        <VBox alignment="CENTER" spacing="30.0"
+              AnchorPane.topAnchor="100.0" AnchorPane.bottomAnchor="100.0"
+              AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="150.0">
             <children>
-                <Label text="Budget Manager" textAlignment="CENTER">
+                <ImageView fitHeight="100.0" preserveRatio="true">
+                    <image>
+                        <Image url="@/Assets/I AM BUDGET.png"/>
+                    </image>
+                </ImageView>
+
+                <Label text="Take control of your finances" textAlignment="CENTER" style="-fx-text-fill: black;">
                     <font>
-                        <Font name="System Bold" size="36.0" />
+                        <Font size="18.0"/>
                     </font>
                 </Label>
-                <Label text="Take control of your finances" textAlignment="CENTER">
+
+                <Button fx:id="loginButton" text="Login" onAction="#navigateToLogin"
+                        prefHeight="50.0" prefWidth="200.0"
+                        style="-fx-background-color: black; -fx-text-fill: white;">
                     <font>
-                        <Font size="18.0" />
-                    </font>
-                </Label>
-                <Button fx:id="loginButton" mnemonicParsing="false" onAction="#navigateToLogin" prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Login">
-                    <font>
-                        <Font size="18.0" />
+                        <Font size="18.0"/>
                     </font>
                 </Button>
-                <Button fx:id="signupButton" mnemonicParsing="false" onAction="#navigateToSignup" prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: #2196F3; -fx-text-fill: white;" text="Sign Up">
+
+                <Button fx:id="signupButton" text="Sign Up" onAction="#navigateToSignup"
+                        prefHeight="50.0" prefWidth="200.0"
+                        style="-fx-background-color: black; -fx-text-fill: white;">
                     <font>
-                        <Font size="18.0" />
+                        <Font size="18.0"/>
                     </font>
                 </Button>
             </children>
             <padding>
-                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
             </padding>
         </VBox>
-        <Label layoutX="14.0" layoutY="469.0" text="© 2025 Budget Manager" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
+
+        <Label layoutX="14.0" layoutY="469.0" text="© 2025 I AM BUDGET"
+               style="-fx-text-fill: black;"
+               AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0"/>
     </children>
 </AnchorPane>

@@ -18,6 +18,7 @@
     <center>
         <SplitPane dividerPositions="0.5" orientation="HORIZONTAL">
             <VBox spacing="10">
+                <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
                 <Label text="Recent Transactions" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
                 <TableView fx:id="transactionTable" prefHeight="200">
                     <columns>
@@ -33,15 +34,19 @@
             </VBox>
 
             <VBox spacing="10">
+                <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
                 <HBox spacing="20" alignment="CENTER">
                     <VBox style="-fx-background-color: #ecf0f1; -fx-padding: 10; -fx-background-radius: 5;">
                         <Label text="Total Income" style="-fx-font-weight: bold;"/>
+                        <Label fx:id="totalIncomeLabel" text="none" style="-fx-font-size: 14;"/>
                     </VBox>
                     <VBox style="-fx-background-color: #ecf0f1; -fx-padding: 10; -fx-background-radius: 5;">
                         <Label text="Total Expense" style="-fx-font-weight: bold;"/>
+                        <Label fx:id="totalExpenseLabel" text="none" style="-fx-font-size: 14;"/>
                     </VBox>
                     <VBox style="-fx-background-color: #ecf0f1; -fx-padding: 10; -fx-background-radius: 5;">
                         <Label text="Balance" style="-fx-font-weight: bold;"/>
+                        <Label fx:id="balanceLabel" text="none" style="-fx-font-size: 14;"/>
                     </VBox>
                 </HBox>
 
@@ -62,7 +67,7 @@
 
     <bottom>
         <HBox alignment="CENTER" style="-fx-background-color: #ecf0f1; -fx-padding: 5;">
-            <Label text="Budget Manager v1.0" style="-fx-font-style: italic;"/>
+            <Label text="I AM BUDGET v1.0" style="-fx-font-style: italic;"/>
         </HBox>
     </bottom>
 </BorderPane>
