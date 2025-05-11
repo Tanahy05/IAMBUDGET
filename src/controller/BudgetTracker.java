@@ -12,19 +12,36 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+/**
+ * A singleton controller class that manages budget tracking operations in the system.
+ * This class implements the Tracker interface for Budget objects and provides functionality
+ * for adding, editing, deleting, and retrieving budgets. It also handles data persistence
+ * operations through the UserDatabase.
+ *
+ * @see interfaces.Tracker
+ * @see model.Budget
+ * @see storage.UserDatabase
+ */
 public class BudgetTracker implements Tracker<Budget>, Serializable {
 
     private static BudgetTracker instance;
 
     private List<Budget> budgets;
 
-
+    /**
+     * Private constructor to enforce the singleton pattern.
+     * Initializes an empty list of budgets.
+     */
     private BudgetTracker() {
         this.budgets = new ArrayList<>();
     }
 
-
+    /**
+     * Returns the singleton instance of the BudgetTracker.
+     * Creates a new instance if one doesn't exist.
+     *
+     * @return The singleton instance of BudgetTracker
+     */
     public static synchronized BudgetTracker getInstance() {
         if (instance == null) {
             instance = new BudgetTracker();
@@ -32,7 +49,12 @@ public class BudgetTracker implements Tracker<Budget>, Serializable {
         return instance;
     }
 
-
+    /**
+     * Adds a new budget to the tracker or updates an existing one if a budget
+     * with the same category already exists.
+     *
+     * @param budget The Budget object to be added or updated
+     */
     @Override
     public void add(Budget budget) {
         if (!validate(budget)) {
@@ -53,7 +75,12 @@ public class BudgetTracker implements Tracker<Budget>, Serializable {
         budgets.add(budget);
     }
 
-
+    /**
+     * Edits an existing budget in the tracker.
+     * The budget is identified by its budgetId.
+     *
+     * @param budget The updated Budget object
+     */
     @Override
     public void edit(Budget budget) {
         if (!validate(budget)) {
@@ -68,13 +95,22 @@ public class BudgetTracker implements Tracker<Budget>, Serializable {
         }
     }
 
-
+    /**
+     * Deletes a budget from the tracker by its ID.
+     *
+     * @param id The ID of the budget to be deleted
+     */
     @Override
     public void delete(String id) {
         budgets.removeIf(budget -> budget.getBudgetId().equals(id));
     }
 
-
+    /**
+     * Validates a budget object to ensure all required fields are present and valid.
+     *
+     * @param budget The Budget object to validate
+     * @return true if the budget is valid, false otherwise
+     */
     @Override
     public boolean validate(Budget budget) {
         // Check that all required fields are present
@@ -93,7 +129,11 @@ public class BudgetTracker implements Tracker<Budget>, Serializable {
         return true;
     }
 
-
+    /**
+     * Calculates the total sum of all budget limits.
+     *
+     * @return The total amount of all budgets as a BigDecimal
+     */
     @Override
     public BigDecimal calculateAmount() {
         return budgets.stream()
@@ -101,18 +141,33 @@ public class BudgetTracker implements Tracker<Budget>, Serializable {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-
+    /**
+     * Returns a defensive copy of all budgets in the tracker.
+     *
+     * @return A new list containing all budgets
+     */
     public List<Budget> getBudgets() {
         return new ArrayList<>(budgets);
     }
 
+    /**
+     * Retrieves all budgets that match the specified category.
+     *
+     * @param category The category to filter budgets by
+     * @return A list of budgets matching the specified category
+     */
     public List<Budget> getBudgetsByCategory(String category) {
         return budgets.stream()
                 .filter(budget -> budget.getCategory().equals(category))
                 .collect(Collectors.toList());
     }
 
-
+    /**
+     * Finds and returns a budget by its ID.
+     *
+     * @param budgetId The ID of the budget to find
+     * @return The Budget object if found, null otherwise
+     */
     public Budget getBudgetById(String budgetId) {
         return budgets.stream()
                 .filter(budget -> budget.getBudgetId().equals(budgetId))
@@ -120,7 +175,11 @@ public class BudgetTracker implements Tracker<Budget>, Serializable {
                 .orElse(null);
     }
 
-
+    /**
+     * Saves the current budget data to persistent storage using the UserDatabase.
+     *
+     * @return true if the save operation was successful, false otherwise
+     */
     public boolean saveData() {
         User currentUser = SystemManager.getCurrentUser();
         if (currentUser == null) return false;
@@ -132,7 +191,11 @@ public class BudgetTracker implements Tracker<Budget>, Serializable {
         return UserDatabase.saveBudgets(currentUser.getUserID(), budgetsList);
     }
 
-
+    /**
+     * Loads budget data from persistent storage for the current user.
+     *
+     * @return true if data was successfully loaded, false if there was no data or an error occurred
+     */
     public boolean loadData() {
         User currentUser = SystemManager.getCurrentUser();
         if (currentUser == null) return false;
@@ -150,6 +213,9 @@ public class BudgetTracker implements Tracker<Budget>, Serializable {
         }
     }
 
+    /**
+     * Clears all budget data from memory.
+     */
     public void clearData() {
         budgets.clear();
         System.out.println("Budget data cleared from memory");

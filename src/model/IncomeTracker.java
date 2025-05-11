@@ -10,20 +10,35 @@ import java.util.stream.Collectors;
 
 /**
  * Implementation of the Tracker interface for managing income entries.
+ * This class follows the Singleton pattern to ensure only one instance exists.
+ * Provides functionality to add, edit, delete, validate, and calculate income entries,
+ * as well as persistence capabilities to save and load income data from files.
+ *
+ * @author Your Name
+ * @version 1.0
+ * @see Tracker
+ * @see Income
  */
 public class IncomeTracker implements Tracker<Income> {
+    /** The singleton instance of IncomeTracker */
     private static IncomeTracker instance;
+
+    /** List containing all income entries */
     private List<Income> incomeList;
 
     /**
-     * Private constructor for Singleton pattern
+     * Private constructor for Singleton pattern.
+     * Initializes an empty list to store income entries.
      */
     private IncomeTracker() {
         this.incomeList = new ArrayList<>();
     }
 
     /**
-     * Get singleton instance of IncomeTracker
+     * Gets the singleton instance of IncomeTracker.
+     * Creates a new instance if one doesn't exist yet.
+     *
+     * @return The singleton instance of IncomeTracker
      */
     public static synchronized IncomeTracker getInstance() {
         if (instance == null) {
@@ -33,14 +48,20 @@ public class IncomeTracker implements Tracker<Income> {
     }
 
     /**
-     * Get all income entries
+     * Retrieves all income entries stored in the tracker.
+     * Returns a defensive copy of the internal list to prevent modification.
+     *
+     * @return A new ArrayList containing all income entries
      */
     public List<Income> getAllIncome() {
         return new ArrayList<>(incomeList);
     }
 
     /**
-     * Get income entries for a specific user
+     * Retrieves income entries for a specific user.
+     *
+     * @param userId The ID of the user whose income entries are to be retrieved
+     * @return A list of income entries belonging to the specified user
      */
     public List<Income> getUserIncome(int userId) {
         return incomeList.stream()
@@ -48,6 +69,13 @@ public class IncomeTracker implements Tracker<Income> {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Adds a new income entry to the tracker.
+     * Validates the income entry before adding it.
+     *
+     * @param income The income entry to add
+     * @throws IllegalArgumentException If the income entry is invalid
+     */
     @Override
     public void add(Income income) {
         if (validate(income)) {
@@ -57,6 +85,13 @@ public class IncomeTracker implements Tracker<Income> {
         }
     }
 
+    /**
+     * Updates an existing income entry in the tracker.
+     * Validates the updated income entry before editing.
+     *
+     * @param updatedIncome The updated income entry
+     * @throws IllegalArgumentException If the income entry is invalid or not found
+     */
     @Override
     public void edit(Income updatedIncome) {
         if (!validate(updatedIncome)) {
@@ -75,11 +110,27 @@ public class IncomeTracker implements Tracker<Income> {
         }
     }
 
+    /**
+     * Deletes an income entry from the tracker by its ID.
+     *
+     * @param id The ID of the income entry to delete
+     */
     @Override
     public void delete(String id) {
         incomeList.removeIf(income -> income.getId().equals(id));
     }
 
+    /**
+     * Validates an income entry by checking that required fields are present and valid.
+     * An income entry is valid if:
+     * - It is not null
+     * - Its source is not null or empty
+     * - Its amount is not null and greater than zero
+     * - Its date is not null
+     *
+     * @param income The income entry to validate
+     * @return true if the income entry is valid, false otherwise
+     */
     @Override
     public boolean validate(Income income) {
         return income != null
@@ -88,6 +139,11 @@ public class IncomeTracker implements Tracker<Income> {
                 && income.getDate() != null;
     }
 
+    /**
+     * Calculates the total amount of all income entries.
+     *
+     * @return The total amount as a BigDecimal
+     */
     @Override
     public BigDecimal calculateAmount() {
         return incomeList.stream()
@@ -96,7 +152,10 @@ public class IncomeTracker implements Tracker<Income> {
     }
 
     /**
-     * Calculate total income for a specific user
+     * Calculates the total amount of income for a specific user.
+     *
+     * @param userId The ID of the user whose total income is to be calculated
+     * @return The total income amount for the specified user as a BigDecimal
      */
     public BigDecimal calculateUserTotalIncome(int userId) {
         return incomeList.stream()
@@ -106,7 +165,10 @@ public class IncomeTracker implements Tracker<Income> {
     }
 
     /**
-     * Save income data to file
+     * Saves income data for a specific user to a file.
+     * The file is stored in the 'data' directory with the name '{userId}_income.dat'.
+     *
+     * @param userId The ID of the user whose income data is to be saved
      */
     public void saveData(int userId) {
         try {
@@ -127,7 +189,12 @@ public class IncomeTracker implements Tracker<Income> {
     }
 
     /**
-     * Load income data from file
+     * Loads income data for a specific user from a file.
+     * If the file doesn't exist, no action is taken.
+     * The method removes any existing income entries for the user and replaces
+     * them with the loaded ones.
+     *
+     * @param userId The ID of the user whose income data is to be loaded
      */
     @SuppressWarnings("unchecked")
     public void loadData(int userId) {
@@ -155,7 +222,7 @@ public class IncomeTracker implements Tracker<Income> {
     }
 
     /**
-     * Clear all income data
+     * Clears all income data from the tracker.
      */
     public void clearData() {
         incomeList.clear();

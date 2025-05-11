@@ -8,19 +8,38 @@ import java.util.stream.Collectors;
 import model.Reminder;
 
 /**
- * Singleton class for managing reminders in the system
+ * Singleton class for managing reminders in the system.
+ * This class handles the creation, storage, retrieval, and management of user reminders.
+ * It provides methods for adding new reminders, retrieving user-specific reminders,
+ * marking reminders as completed, and persisting reminder data to disk.
  */
 public class ReminderTracker {
+    /** Directory where reminder data files are stored */
     private static final String DATA_DIR = "data";
+
+    /** Singleton instance of the ReminderTracker */
     private static ReminderTracker instance;
+
+    /** List of all reminders in the system */
     private ArrayList<Reminder> reminders;
+
+    /** Counter for assigning unique IDs to new reminders */
     private int nextReminderId = 1;
 
-    // Private constructor for singleton pattern
+    /**
+     * Private constructor for singleton pattern.
+     * Initializes the reminders list.
+     */
     private ReminderTracker() {
         reminders = new ArrayList<>();
     }
 
+    /**
+     * Gets the singleton instance of the ReminderTracker.
+     * Creates a new instance if one doesn't exist.
+     *
+     * @return The singleton instance of ReminderTracker
+     */
     public static ReminderTracker getInstance() {
         if (instance == null) {
             instance = new ReminderTracker();
@@ -29,7 +48,15 @@ public class ReminderTracker {
     }
 
     /**
-     * Adds a new reminder to the tracker
+     * Adds a new reminder to the tracker.
+     * Creates a new Reminder object with the given parameters and a unique ID.
+     *
+     * @param name The name or description of the reminder
+     * @param amount The monetary amount associated with the reminder
+     * @param dueDate The date when the reminder is due
+     * @param reminderDate The date when the user should be reminded
+     * @param userId The ID of the user who owns this reminder
+     * @return The newly created Reminder object
      */
     public Reminder addReminder(String name, double amount, LocalDate dueDate, LocalDate reminderDate, int userId) {
         Reminder reminder = new Reminder(nextReminderId++, name, amount, dueDate, reminderDate, userId);
@@ -38,7 +65,11 @@ public class ReminderTracker {
     }
 
     /**
-     * Get all reminders for a specific user
+     * Gets all reminders for a specific user.
+     * Filters the reminders list to include only those belonging to the specified user.
+     *
+     * @param userId The ID of the user whose reminders to retrieve
+     * @return A list of Reminder objects belonging to the specified user
      */
     public List<Reminder> getUserReminders(int userId) {
         return reminders.stream()
@@ -47,7 +78,13 @@ public class ReminderTracker {
     }
 
     /**
-     * Mark a reminder as completed
+     * Marks a reminder as completed.
+     * Finds the reminder with the specified ID belonging to the specified user
+     * and marks it as completed.
+     *
+     * @param reminderId The ID of the reminder to mark as completed
+     * @param userId The ID of the user who owns the reminder
+     * @return true if the reminder was found and marked as completed, false otherwise
      */
     public boolean markReminderCompleted(int reminderId, int userId) {
         for (Reminder reminder : reminders) {
@@ -60,7 +97,8 @@ public class ReminderTracker {
     }
 
     /**
-     * Clear all reminders from memory
+     * Clears all reminders from memory.
+     * Removes all reminders from the list and resets the reminder ID counter.
      */
     public void clearData() {
         reminders.clear();
@@ -68,7 +106,11 @@ public class ReminderTracker {
     }
 
     /**
-     * Load reminders for a specific user from storage
+     * Loads reminders for a specific user from storage.
+     * Reads serialized reminder data from a user-specific file and adds
+     * the reminders to the in-memory list.
+     *
+     * @param userId The ID of the user whose reminders to load
      */
     public void loadData(int userId) {
         File dataDir = new File(DATA_DIR);
@@ -112,7 +154,10 @@ public class ReminderTracker {
     }
 
     /**
-     * Save reminders for a specific user to storage
+     * Saves reminders for a specific user to storage.
+     * Writes the user's reminders to a user-specific file as serialized objects.
+     *
+     * @param userId The ID of the user whose reminders to save
      */
     public void saveData(int userId) {
         File dataDir = new File(DATA_DIR);
