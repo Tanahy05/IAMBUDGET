@@ -12,9 +12,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.PieChart;
 import javafx.stage.Stage;
-import model.Budget;
-import model.Reminder;
-import model.SystemManager;
+import model.*;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -22,28 +20,53 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Controller class for the Dashboard view in the personal finance application.
+ * This class manages the display of user financial data including transactions,
+ * budgets, reminders, and summary statistics.
+ */
 public class Dashboard {
 
     // Add @FXML annotations to all UI components
+    /** TableView displaying recent transactions */
     @FXML private TableView<Transaction> transactionTable;
+    /** Column displaying transaction type (Income/Expense) */
     @FXML private TableColumn<Transaction, String> typeColumn;
+    /** Column displaying transaction category */
     @FXML private TableColumn<Transaction, String> categoryColumn;
+    /** Column displaying transaction amount */
     @FXML private TableColumn<Transaction, Double> amountColumn;
+    /** Column displaying transaction date */
     @FXML private TableColumn<Transaction, LocalDate> dateColumn;
 
+    /** TableView displaying budget information */
     @FXML private TableView<BudgetViewModel> budgetTable;
+    /** Column displaying budget category */
     @FXML private TableColumn<BudgetViewModel, String> budgetCategoryColumn;
+    /** Column displaying budget limit */
     @FXML private TableColumn<BudgetViewModel, BigDecimal> limitColumn;
+    /** Column displaying budget period */
     @FXML private TableColumn<BudgetViewModel, String> periodColumn;
 
+    /** ListView displaying pending reminders */
     @FXML private ListView<DisplayReminder> remindersList;
+    /** PieChart displaying spending distribution */
     @FXML private PieChart spendingChart;
+    /** Label displaying total income */
     @FXML private Label totalIncomeLabel;
+    /** Label displaying total expenses */
     @FXML private Label totalExpenseLabel;
+    /** Label displaying current balance */
     @FXML private Label balanceLabel;
 
+    /** Reference to the BudgetTracker singleton */
     private BudgetTracker budgetTracker;
 
+    /**
+     * Initializes the dashboard view, loading data from various trackers
+     * and setting up UI components.
+     * This method is automatically called by JavaFX after the FXML is loaded.
+     */
     @FXML
     public void initialize() {
         // Get the budget tracker instance
@@ -75,6 +98,10 @@ public class Dashboard {
         updateSpendingChart();
     }
 
+    /**
+     * Sets up the transaction table by binding column cell factories
+     * to the corresponding properties in the Transaction class.
+     */
     private void initializeTransactionTable() {
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
         categoryColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
@@ -82,22 +109,66 @@ public class Dashboard {
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
     }
 
+    /**
+     * Sets up the budget table by binding column cell factories
+     * to the corresponding properties in the BudgetViewModel class.
+     */
     private void initializeBudgetTable() {
         budgetCategoryColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
         limitColumn.setCellValueFactory(new PropertyValueFactory<>("limit"));
         periodColumn.setCellValueFactory(new PropertyValueFactory<>("period"));
     }
 
+    /**
+     * Loads transaction data from ExpenseTracker and IncomeTracker
+     * and displays the most recent transactions in the transaction table.
+     * Shows the last 5 income and 5 expense transactions.
+     */
     private void loadSampleTransactionData() {
-        // Sample transactions (replace with actual transaction data when available)
-        ObservableList<Transaction> transactions = FXCollections.observableArrayList(
-                new Transaction("Expense", "Food", 25.50, LocalDate.now()),
-                new Transaction("Income", "Salary", 2000.00, LocalDate.now()),
-                new Transaction("Expense", "Transport", 15.75, LocalDate.now())
-        );
-        transactionTable.setItems(transactions);
+        if (transactionTable == null || !SystemManager.isUserLoggedIn()) {
+            return;
+        }
+
+        // Get the actual expenses and incomes
+        List<Expense> actualExpenses = ExpenseTracker.getInstance().getExpenses();
+        List<Income> actualIncomes = IncomeTracker.getInstance().getUserIncome(SystemManager.getCurrentUser().getUserID());
+
+        ObservableList<Transaction> transactionList = FXCollections.observableArrayList();
+
+        // Add last 5 incomes to the transaction list
+        int incomeSize = actualIncomes.size();
+        int incomeStart = Math.max(0, incomeSize - 5);
+        for (int i = incomeStart; i < incomeSize; i++) {
+            Income income = actualIncomes.get(i);
+            transactionList.add(new Transaction(
+                    "Income", // Type of transaction
+                    income.getSource(), // Category
+                    income.getAmount().doubleValue(), // Amount (convert to double if it's BigDecimal)
+                    income.getDate() // Date
+            ));
+        }
+
+        // Add last 5 expenses to the transaction list
+        int expenseSize = actualExpenses.size();
+        int expenseStart = Math.max(0, expenseSize - 5);
+        for (int i = expenseStart; i < expenseSize; i++) {
+            Expense expense = actualExpenses.get(i);
+            transactionList.add(new Transaction(
+                    "Expense", // Type of transaction
+                    expense.getCategory(), // Category
+                    expense.getAmount(), // Amount (convert to double if it's BigDecimal)
+                    expense.getDate() // Date
+            ));
+        }
+
+        // Set the transaction data into the table
+        transactionTable.setItems(transactionList);
     }
 
+    /**
+     * Loads budget data from the BudgetTracker and displays
+     * it in the budget table using the BudgetViewModel wrapper class.
+     */
     private void loadActualBudgetData() {
         if (budgetTable == null || !SystemManager.isUserLoggedIn()) {
             return;
@@ -122,6 +193,10 @@ public class Dashboard {
         System.out.println("Loaded " + budgetViewModels.size() + " budgets for dashboard display");
     }
 
+    /**
+     * Updates the spending chart with data from the user's budgets.
+     * Uses budget limits to create pie chart segments for each category.
+     */
     private void updateSpendingChart() {
         if (spendingChart == null || !SystemManager.isUserLoggedIn()) {
             return;
@@ -144,7 +219,9 @@ public class Dashboard {
     }
 
     /**
-     * Load reminders from the ReminderTracker for the current user
+     * Loads reminders from the ReminderTracker for the current user
+     * and displays them in the reminders list. Sets up a double-click
+     * handler to mark reminders as completed.
      */
     private void loadReminders() {
         if (remindersList == null || !SystemManager.isUserLoggedIn()) {
@@ -193,6 +270,10 @@ public class Dashboard {
         });
     }
 
+    /**
+     * Updates the summary labels (income, expense, balance)
+     * based on the data in the transaction table.
+     */
     private void updateSummary() {
         double totalIncome = transactionTable.getItems().stream()
                 .filter(t -> t.getType().equals("Income"))
@@ -209,13 +290,24 @@ public class Dashboard {
         balanceLabel.setText(String.format("$%.2f", totalIncome - totalExpense));
     }
 
-    // Data classes
+    /**
+     * Internal class representing a transaction for display purposes in the UI.
+     * Combines both income and expense transactions into a single view model.
+     */
     public static class Transaction {
         private final String type;
         private final String category;
         private final double amount;
         private final LocalDate date;
 
+        /**
+         * Creates a new Transaction instance.
+         *
+         * @param type The transaction type (Income or Expense)
+         * @param category The transaction category or source
+         * @param amount The transaction amount
+         * @param date The transaction date
+         */
         public Transaction(String type, String category, double amount, LocalDate date) {
             this.type = type;
             this.category = category;
@@ -223,35 +315,75 @@ public class Dashboard {
             this.date = date;
         }
 
-        // Getters
+        /**
+         * Gets the transaction type.
+         * @return The transaction type (Income or Expense)
+         */
         public String getType() { return type; }
+
+        /**
+         * Gets the transaction category.
+         * @return The transaction category or source
+         */
         public String getCategory() { return category; }
+
+        /**
+         * Gets the transaction amount.
+         * @return The transaction amount
+         */
         public double getAmount() { return amount; }
+
+        /**
+         * Gets the transaction date.
+         * @return The transaction date
+         */
         public LocalDate getDate() { return date; }
     }
 
     /**
-     * View Model class for Budgets in the UI
+     * View Model class for Budgets in the UI.
+     * Maps model.Budget objects to a simplified version for display.
      */
     public static class BudgetViewModel {
         private final String category;
         private final BigDecimal limit;
         private final String period;
 
+        /**
+         * Creates a new BudgetViewModel instance.
+         *
+         * @param category The budget category
+         * @param limit The budget limit amount
+         * @param period The budget period (e.g., "Weekly", "Monthly")
+         */
         public BudgetViewModel(String category, BigDecimal limit, String period) {
             this.category = category;
             this.limit = limit;
             this.period = period;
         }
 
-        // Getters
+        /**
+         * Gets the budget category.
+         * @return The budget category
+         */
         public String getCategory() { return category; }
+
+        /**
+         * Gets the budget limit.
+         * @return The budget limit amount
+         */
         public BigDecimal getLimit() { return limit; }
+
+        /**
+         * Gets the budget period.
+         * @return The budget period (e.g., "Weekly", "Monthly")
+         */
         public String getPeriod() { return period; }
     }
 
     /**
-     * DisplayReminder class for showing reminders in the UI
+     * DisplayReminder class for showing reminders in the UI.
+     * Provides a formatted string representation for ListView display.
      */
     public static class DisplayReminder {
         private final String name;
@@ -259,6 +391,14 @@ public class Dashboard {
         private final double amount;
         private final int id;
 
+        /**
+         * Creates a new DisplayReminder instance.
+         *
+         * @param name The reminder name or description
+         * @param dueDate The reminder due date
+         * @param amount The associated amount for the reminder
+         * @param id The unique identifier for the reminder
+         */
         public DisplayReminder(String name, LocalDate dueDate, double amount, int id) {
             this.name = name;
             this.dueDate = dueDate;
@@ -266,10 +406,20 @@ public class Dashboard {
             this.id = id;
         }
 
+        /**
+         * Gets the reminder's unique identifier.
+         * @return The reminder ID
+         */
         public int getId() {
             return id;
         }
 
+        /**
+         * Returns a string representation of the reminder for display in the UI.
+         * Format: [name] - $[amount] - Due: [date]
+         *
+         * @return The formatted string representation
+         */
         @Override
         public String toString() {
             return name + " - $" + String.format("%.2f", amount) + " - Due: " + dueDate.toString();
