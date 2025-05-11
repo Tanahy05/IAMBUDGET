@@ -1,11 +1,14 @@
 package model;
-import model.User;
+
 import controller.BudgetTracker;
+import controller.ReminderTracker;
 import java.io.File;
 
 public class SystemManager {
     private static User currentUser;
     private static BudgetTracker budgetTracker;
+    private static IncomeTracker incomeTracker;
+    private static ReminderTracker reminderTracker;
 
     public static void loginUser(User user) {
         currentUser = user;
@@ -19,6 +22,12 @@ public class SystemManager {
         if (budgetTracker != null) {
             budgetTracker.clearData(); // Clear budget data from memory
         }
+        if (incomeTracker != null) {
+            incomeTracker.clearData(); // Clear income data from memory
+        }
+        if (reminderTracker != null) {
+            reminderTracker.clearData(); // Clear reminder data from memory
+        }
         System.out.println("Logged out successfully");
     }
 
@@ -30,6 +39,12 @@ public class SystemManager {
         // Initialize the budget tracker
         budgetTracker = BudgetTracker.getInstance();
 
+        // Initialize the income tracker
+        incomeTracker = IncomeTracker.getInstance();
+
+        // Initialize the reminder tracker
+        reminderTracker = ReminderTracker.getInstance();
+
         // Create data directory if it doesn't exist
         File dataDir = new File("data");
         if (!dataDir.exists()) {
@@ -39,12 +54,19 @@ public class SystemManager {
         // Load budget data
         budgetTracker.loadData();
 
-        // TODO: Load Expense, Income, Transaction, etc.
+        // Load income data
+        incomeTracker.loadData(uid);
+
+        // Load reminder data
+        reminderTracker.loadData(uid);
+
+        // TODO: Load Expense, Transaction, etc.
         // from files like "data/uid_expense.dat" etc.
     }
 
     public static void saveUserData() {
         if (currentUser == null) return;
+        int uid = currentUser.getUserID();
 
         // Create data directory if it doesn't exist
         File dataDir = new File("data");
@@ -57,7 +79,17 @@ public class SystemManager {
             budgetTracker.saveData();
         }
 
-        // TODO: Save Expense, Income, Transaction, etc.
+        // Save income data
+        if (incomeTracker != null) {
+            incomeTracker.saveData(uid);
+        }
+
+        // Save reminder data
+        if (reminderTracker != null) {
+            reminderTracker.saveData(uid);
+        }
+
+        // TODO: Save Expense, Transaction, etc.
         // to files like "data/uid_expense.dat" etc.
     }
 
@@ -70,5 +102,19 @@ public class SystemManager {
             budgetTracker = BudgetTracker.getInstance();
         }
         return budgetTracker;
+    }
+
+    public static IncomeTracker getIncomeTracker() {
+        if (incomeTracker == null) {
+            incomeTracker = IncomeTracker.getInstance();
+        }
+        return incomeTracker;
+    }
+
+    public static ReminderTracker getReminderTracker() {
+        if (reminderTracker == null) {
+            reminderTracker = ReminderTracker.getInstance();
+        }
+        return reminderTracker;
     }
 }
