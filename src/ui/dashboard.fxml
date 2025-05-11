@@ -62,7 +62,7 @@
 
     <bottom>
         <HBox alignment="CENTER" style="-fx-background-color: #ecf0f1; -fx-padding: 5;">
-            <Label text="Budget Manager v1.0" style="-fx-font-style: italic;"/>
+            <Label text="I AM BUDGET v1.0" style="-fx-font-style: italic;"/>
         </HBox>
     </bottom>
 </BorderPane>
