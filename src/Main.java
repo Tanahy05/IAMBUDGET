@@ -2,6 +2,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 /**
@@ -18,8 +19,22 @@ public class Main extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("ui/HomePage.fxml"));
+        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("ui/Login.fxml"));
         Scene scene = new Scene(root);
+
+        // Fixed image loading path
+        try {
+            Image icon = new Image(getClass().getClassLoader().getResourceAsStream("Assets/I AM BUDGET.png"));
+            if (icon != null && !icon.isError()) {
+                primaryStage.getIcons().add(icon);
+            } else {
+                System.err.println("Could not load application icon");
+            }
+        } catch (Exception e) {
+            System.err.println("Error loading application icon: " + e.getMessage());
+            // The application can continue without an icon
+        }
+
         primaryStage.setTitle("I AM BUDGET");
         primaryStage.setScene(scene);
         primaryStage.setResizable(true);
