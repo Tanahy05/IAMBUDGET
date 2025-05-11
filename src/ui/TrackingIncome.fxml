@@ -21,15 +21,15 @@
             <fx:include source="NavBar.fxml"></fx:include>
             <VBox spacing="10" VBox.vgrow="ALWAYS">
             <!-- Header -->
-            <HBox alignment="CENTER" style="-fx-background-color: #000000; -fx-padding: 15;">
-                <Label text="Income Tracking" textFill="WHITE">
-                    <font>
-                        <Font name="System Bold" size="24.0"/>
-                    </font>
-                </Label>
-            </HBox>
+                <HBox alignment="CENTER" style="-fx-padding: 15;">
+                    <Label text="Income Tracker" style="-fx-text-fill: black;">
+                        <font>
+                            <Font name="System Bold" size="24.0"/>
+                        </font>
+                    </Label>
+                </HBox>
 
-            <!-- Form Section -->
+                <!-- Form Section -->
             <VBox spacing="15.0" style="-fx-padding: 20;">
                 <Label text="Add Income" style="-fx-font-weight: bold; -fx-font-size: 18;">
                 </Label>

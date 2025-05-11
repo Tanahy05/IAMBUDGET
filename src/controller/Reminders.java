@@ -1,3 +1,4 @@
+
 package controller;
 
 import javafx.event.ActionEvent;
@@ -14,30 +15,60 @@ import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 /**
- * Controller for the Reminders view
+ * Controller for the Reminders view.
+ * Handles user interactions for creating and managing reminders.
+ * This class manages the UI components and business logic for the reminder creation form.
  */
 public class Reminders implements Initializable {
 
+    /**
+     * Text field for entering the reminder name/description
+     */
     @FXML
     private TextField reminderNameField;
 
+    /**
+     * Text field for entering the amount associated with the reminder
+     */
     @FXML
     private TextField amountField;
 
+    /**
+     * Date picker for selecting the due date of the reminder
+     */
     @FXML
     private DatePicker dueDatePicker;
 
+    /**
+     * Date picker for selecting when the user should be reminded
+     */
     @FXML
     private DatePicker reminderDatePicker;
 
+    /**
+     * Button for saving a new reminder
+     */
     @FXML
     private Button saveReminderButton;
 
+    /**
+     * Button for clearing the reminder form
+     */
     @FXML
     private Button clearFormButton;
 
+    /**
+     * Reference to the reminder tracker service
+     */
     private ReminderTracker reminderTracker;
 
+    /**
+     * Initializes the controller.
+     * Sets up initial values for UI components and checks user login status.
+     *
+     * @param url The location used to resolve relative paths for the root object
+     * @param resourceBundle The resources used to localize the root object
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // Initialize with today's date
@@ -57,7 +88,10 @@ public class Reminders implements Initializable {
     }
 
     /**
-     * Handle saving a new reminder
+     * Handles the save reminder button action.
+     * Validates form input, creates a new reminder, and saves it to storage.
+     *
+     * @param event The action event triggered by clicking the save button
      */
     @FXML
     void handleSaveReminder(ActionEvent event) {
@@ -102,7 +136,10 @@ public class Reminders implements Initializable {
     }
 
     /**
-     * Handle clearing the form
+     * Handles the clear form button action.
+     * Resets all form fields to their default values.
+     *
+     * @param event The action event triggered by clicking the clear button, can be null if called programmatically
      */
     @FXML
     void handleClearForm(ActionEvent event) {
@@ -113,7 +150,10 @@ public class Reminders implements Initializable {
     }
 
     /**
-     * Validate the form fields
+     * Validates all form input fields.
+     * Checks for required fields, valid numeric values, and logical date relationships.
+     *
+     * @return true if all form inputs are valid, false otherwise
      */
     private boolean validateForm() {
         StringBuilder errorMessage = new StringBuilder();
@@ -156,7 +196,11 @@ public class Reminders implements Initializable {
     }
 
     /**
-     * Show an alert dialog
+     * Displays an alert dialog with the specified type, title, and message.
+     *
+     * @param alertType The type of alert to display (e.g., ERROR, INFORMATION)
+     * @param title The title of the alert dialog
+     * @param message The content message to display in the alert
      */
     private void showAlert(Alert.AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
@@ -167,7 +211,8 @@ public class Reminders implements Initializable {
     }
 
     /**
-     * Show login alert
+     * Displays a login required alert dialog.
+     * Informs the user that they must log in to create reminders.
      */
     private void showLoginAlert() {
         showAlert(Alert.AlertType.WARNING, "Login Required",
@@ -175,7 +220,10 @@ public class Reminders implements Initializable {
     }
 
     /**
-     * Enable or disable form elements
+     * Enables or disables all form components.
+     * Used to restrict access when no user is logged in.
+     *
+     * @param disabled true to disable all form components, false to enable them
      */
     private void setFormDisabled(boolean disabled) {
         reminderNameField.setDisable(disabled);

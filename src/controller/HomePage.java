@@ -9,6 +9,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * Controller class for the application's home page.
+ * <p>
+ * This controller handles navigation from the home page to other pages
+ * in the application, specifically the login and signup pages.
+ * It serves as the entry point for users to either log in to an existing
+ * account or create a new account.
+ * </p>
+ */
 public class HomePage {
 
     /**

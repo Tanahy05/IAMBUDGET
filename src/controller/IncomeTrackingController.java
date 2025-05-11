@@ -23,44 +23,89 @@ import java.time.LocalDate;
 import java.util.ResourceBundle;
 import java.util.List;
 
+/**
+ * Controller class for the Income Tracking interface.
+ * Handles user interactions for adding, editing, and managing income entries.
+ */
 public class IncomeTrackingController implements Initializable {
 
+    /** ComboBox for selecting the income source */
     @FXML
     private ComboBox<String> incomeSourceComboBox;
+
+    /** TextField for entering the income amount */
     @FXML
     private TextField amountTextField;
+
+    /** DatePicker for selecting the income date */
     @FXML
     private DatePicker datePicker;
+
+    /** TextField for entering a description of the income */
     @FXML
     private TextField descriptionTextField;
+
+    /** CheckBox for indicating if the income is recurring */
     @FXML
     private CheckBox recurringCheckBox;
+
+    /** ComboBox for selecting the recurring period if applicable */
     @FXML
     private ComboBox<String> recurringPeriodComboBox;
+
+    /** Button for saving or updating income entries */
     @FXML
     private Button saveButton;
+
+    /** Button for clearing the form */
     @FXML
     private Button clearButton;
+
+    /** Label for displaying status messages and errors */
     @FXML
     private Label statusLabel;
+
+    /** TableView for displaying income entries */
     @FXML
     private TableView<Income> incomeTableView;
+
+    /** Table column for the income date */
     @FXML
     private TableColumn<Income, LocalDate> dateColumn;
+
+    /** Table column for the income source */
     @FXML
     private TableColumn<Income, String> sourceColumn;
+
+    /** Table column for the income amount */
     @FXML
     private TableColumn<Income, BigDecimal> amountColumn;
+
+    /** Table column for the income description */
     @FXML
     private TableColumn<Income, String> descriptionColumn;
+
+    /** Table column for the recurring status */
     @FXML
     private TableColumn<Income, Boolean> recurringColumn;
+
+    /** Table column for the action buttons (edit/delete) */
     @FXML
     private TableColumn<Income, Void> actionsColumn;
 
+    /** Observable list to store income data for the TableView */
     private ObservableList<Income> incomeData = FXCollections.observableArrayList();
+
+    /** Reference to the currently edited income entry, null if creating a new entry */
     private Income currentIncome = null; // For editing existing income
 
+    /**
+     * Initializes the controller class.
+     * Sets up UI components, populates default values, and loads existing income data.
+     *
+     * @param url The location used to resolve relative paths for the root object
+     * @param rb The resources used to localize the root object
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // Initialize date picker with current date
@@ -120,6 +165,9 @@ public class IncomeTrackingController implements Initializable {
         loadIncomeData();
     }
 
+    /**
+     * Sets up the actions column with edit and delete buttons for each income entry.
+     */
     private void setupActionsColumn() {
         Callback<TableColumn<Income, Void>, TableCell<Income, Void>> cellFactory = new Callback<>() {
             @Override
@@ -157,6 +205,10 @@ public class IncomeTrackingController implements Initializable {
         actionsColumn.setCellFactory(cellFactory);
     }
 
+    /**
+     * Loads income data for the current user and displays it in the table.
+     * Also calculates and displays the total income amount.
+     */
     private void loadIncomeData() {
         if (!SystemManager.isUserLoggedIn()) {
             statusLabel.setText("No user logged in");
@@ -181,6 +233,11 @@ public class IncomeTrackingController implements Initializable {
         statusLabel.setText("Total Income: $" + totalIncome);
     }
 
+    /**
+     * Populates the form with data from an existing income entry for editing.
+     *
+     * @param income The income entry to be edited
+     */
     private void populateFormForEdit(Income income) {
         // Store the current income for editing
         currentIncome = income;
@@ -205,6 +262,12 @@ public class IncomeTrackingController implements Initializable {
         saveButton.setText("Update Income");
     }
 
+    /**
+     * Handles the action when the save button is clicked.
+     * Creates a new income entry or updates an existing one based on form data.
+     *
+     * @param event The action event
+     */
     @FXML
     private void handleSaveIncome(ActionEvent event) {
         try {
@@ -269,6 +332,11 @@ public class IncomeTrackingController implements Initializable {
         }
     }
 
+    /**
+     * Validates the form data before saving or updating an income entry.
+     *
+     * @return true if the form data is valid, false otherwise
+     */
     private boolean validateForm() {
         StringBuilder errorMsg = new StringBuilder();
 
@@ -307,6 +375,11 @@ public class IncomeTrackingController implements Initializable {
         return true;
     }
 
+    /**
+     * Handles the deletion of an income entry after confirmation.
+     *
+     * @param income The income entry to be deleted
+     */
     private void handleDeleteIncome(Income income) {
         IncomeTracker incomeTracker = SystemManager.getIncomeTracker();
 
@@ -332,6 +405,12 @@ public class IncomeTrackingController implements Initializable {
         });
     }
 
+    /**
+     * Handles the action when the clear button is clicked.
+     * Resets all form fields and the current editing state.
+     *
+     * @param event The action event, can be null if called programmatically
+     */
     @FXML
     private void handleClearForm(ActionEvent event) {
         // Reset all form fields
@@ -349,6 +428,12 @@ public class IncomeTrackingController implements Initializable {
         statusLabel.setText("Form cleared");
     }
 
+    /**
+     * Handles the action when the dashboard navigation button is clicked.
+     * Currently only displays a message as the navigation is not fully implemented.
+     *
+     * @param event The action event
+     */
     @FXML
     private void handleGoToDashboard(ActionEvent event) {
         // This would be handled by a navigation service or main controller

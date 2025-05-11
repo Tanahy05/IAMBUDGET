@@ -23,6 +23,11 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * Controller class for the Budgeting Analysis view.
+ * Handles budget creation, editing, deletion and visualization.
+ * Implements the JavaFX Initializable interface for UI initialization.
+ */
 public class BudgetingAnalysis implements Initializable {
 
     @FXML private ComboBox<String> categoryComboBox;
@@ -50,6 +55,14 @@ public class BudgetingAnalysis implements Initializable {
 
     private BudgetTracker budgetTracker;
 
+    /**
+     * Initializes the controller class.
+     * This method is automatically called after the FXML file has been loaded.
+     * Sets up the UI components and loads budget data.
+     *
+     * @param location The location used to resolve relative paths for the root object
+     * @param resources The resources used to localize the root object
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         budgetTracker = SystemManager.getBudgetTracker();
@@ -59,6 +72,10 @@ public class BudgetingAnalysis implements Initializable {
         loadBudgetData();
     }
 
+    /**
+     * Sets up the combo boxes with appropriate values and defaults.
+     * Configures category, time period, and analysis period combo boxes.
+     */
     private void setupComboBoxes() {
         categoryComboBox.setItems(FXCollections.observableArrayList(defaultCategories));
         timePeriodComboBox.setItems(FXCollections.observableArrayList(timePeriods));
@@ -68,6 +85,10 @@ public class BudgetingAnalysis implements Initializable {
         analysisPeriodComboBox.setValue("This Month");
     }
 
+    /**
+     * Sets up the table view for displaying budget categories.
+     * Configures columns and cell factories for the budget table.
+     */
     private void setupTableView() {
         budgets = FXCollections.observableArrayList();
 
@@ -97,11 +118,19 @@ public class BudgetingAnalysis implements Initializable {
         budgetCategoriesTable.setItems(budgets);
     }
 
+    /**
+     * Sets up the charts for displaying budget analysis data.
+     * Initializes the pie chart for spending by category.
+     */
     private void setupCharts() {
         spendingPieChart.setData(FXCollections.observableArrayList());
         spendingPieChart.setTitle("Spending by Category");
     }
 
+    /**
+     * Loads budget data from the system manager.
+     * Populates the table view with current budgets and updates analysis.
+     */
     private void loadBudgetData() {
         if (SystemManager.isUserLoggedIn()) {
             budgets.clear();
@@ -111,6 +140,13 @@ public class BudgetingAnalysis implements Initializable {
         }
     }
 
+    /**
+     * Handles the save budget button action.
+     * Creates a new budget or updates an existing one based on form input.
+     * Validates input before saving.
+     *
+     * @param event The action event triggered by the save button
+     */
     @FXML
     private void handleSaveBudget(ActionEvent event) {
         String category = categoryComboBox.getValue();
@@ -162,6 +198,12 @@ public class BudgetingAnalysis implements Initializable {
         }
     }
 
+    /**
+     * Handles deletion of a budget from the table.
+     * Removes the budget from both the UI and the underlying data model.
+     *
+     * @param budget The budget to be deleted
+     */
     private void handleDeleteBudget(Budget budget) {
         budgets.remove(budget);
         budgetTracker.delete(budget.getBudgetId());
@@ -170,17 +212,31 @@ public class BudgetingAnalysis implements Initializable {
         showAlert("Budget deleted successfully");
     }
 
+    /**
+     * Clears the budget input form fields.
+     * Resets category, amount, and sets time period back to default.
+     */
     private void clearBudgetForm() {
         categoryComboBox.setValue(null);
         budgetAmountField.clear();
         timePeriodComboBox.setValue("Monthly");
     }
 
+    /**
+     * Handles changes to the analysis period combo box.
+     * Updates the budget analysis visualizations based on selected period.
+     *
+     * @param event The action event triggered by combo box selection
+     */
     @FXML
     private void handleAnalysisPeriodChange(ActionEvent event) {
         updateBudgetAnalysis();
     }
 
+    /**
+     * Updates the budget analysis visualizations.
+     * Refreshes the pie chart with current spending data by category.
+     */
     private void updateBudgetAnalysis() {
         ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
         for (Budget budget : budgets) {
@@ -191,11 +247,23 @@ public class BudgetingAnalysis implements Initializable {
         spendingPieChart.setData(pieChartData);
     }
 
+    /**
+     * Handles the export report button action.
+     * Currently displays a placeholder alert as functionality is not implemented.
+     *
+     * @param event The action event triggered by the export button
+     */
     @FXML
     private void handleExportReport(ActionEvent event) {
         showAlert("Report export functionality not yet implemented");
     }
 
+    /**
+     * Handles navigation back to the dashboard.
+     * Loads the dashboard FXML and displays it in the current window.
+     *
+     * @param event The action event triggered by the dashboard button
+     */
     @FXML
     private void handleBackToDashboard(ActionEvent event) {
         try {
@@ -209,6 +277,11 @@ public class BudgetingAnalysis implements Initializable {
         }
     }
 
+    /**
+     * Shows an information alert with the specified message.
+     *
+     * @param message The message to display in the alert
+     */
     private void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Information");
