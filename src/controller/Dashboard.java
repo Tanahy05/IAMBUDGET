@@ -12,9 +12,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.PieChart;
 import javafx.stage.Stage;
-import model.Budget;
-import model.Reminder;
-import model.SystemManager;
+import model.*;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -89,13 +87,44 @@ public class Dashboard {
     }
 
     private void loadSampleTransactionData() {
-        // Sample transactions (replace with actual transaction data when available)
-        ObservableList<Transaction> transactions = FXCollections.observableArrayList(
-                new Transaction("Expense", "Food", 25.50, LocalDate.now()),
-                new Transaction("Income", "Salary", 2000.00, LocalDate.now()),
-                new Transaction("Expense", "Transport", 15.75, LocalDate.now())
-        );
-        transactionTable.setItems(transactions);
+        if (transactionTable == null || !SystemManager.isUserLoggedIn()) {
+            return;
+        }
+
+        // Get the actual expenses and incomes
+        List<Expense> actualExpenses = ExpenseTracker.getInstance().getExpenses();
+        List<Income> actualIncomes = IncomeTracker.getInstance().getUserIncome(SystemManager.getCurrentUser().getUserID());
+
+        ObservableList<Transaction> transactionList = FXCollections.observableArrayList();
+
+        // Add last 5 incomes to the transaction list
+        int incomeSize = actualIncomes.size();
+        int incomeStart = Math.max(0, incomeSize - 5);
+        for (int i = incomeStart; i < incomeSize; i++) {
+            Income income = actualIncomes.get(i);
+            transactionList.add(new Transaction(
+                    "Income", // Type of transaction
+                    income.getSource(), // Category
+                    income.getAmount().doubleValue(), // Amount (convert to double if it's BigDecimal)
+                    income.getDate() // Date
+            ));
+        }
+
+        // Add last 5 expenses to the transaction list
+        int expenseSize = actualExpenses.size();
+        int expenseStart = Math.max(0, expenseSize - 5);
+        for (int i = expenseStart; i < expenseSize; i++) {
+            Expense expense = actualExpenses.get(i);
+            transactionList.add(new Transaction(
+                    "Expense", // Type of transaction
+                    expense.getCategory(), // Category
+                    expense.getAmount(), // Amount (convert to double if it's BigDecimal)
+                    expense.getDate() // Date
+            ));
+        }
+
+        // Set the transaction data into the table
+        transactionTable.setItems(transactionList);
     }
 
     private void loadActualBudgetData() {
