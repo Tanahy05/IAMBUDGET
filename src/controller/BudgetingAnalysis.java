@@ -247,16 +247,6 @@ public class BudgetingAnalysis implements Initializable {
         spendingPieChart.setData(pieChartData);
     }
 
-    /**
-     * Handles the export report button action.
-     * Currently displays a placeholder alert as functionality is not implemented.
-     *
-     * @param event The action event triggered by the export button
-     */
-    @FXML
-    private void handleExportReport(ActionEvent event) {
-        showAlert("Report export functionality not yet implemented");
-    }
 
     /**
      * Handles navigation back to the dashboard.
