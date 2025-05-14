@@ -132,6 +132,27 @@ public class NavBar {
             e.printStackTrace();
         }
     }
+    /**
+     * Navigates to the Expense Tracking screen.
+     * <p>
+     * This method loads the ExpenseTracker.fxml file and sets it as the current scene.
+     * </p>
+     *
+     * @param event The ActionEvent triggered by clicking the Expense navigation button
+     */
+    @FXML
+    private void showCredits(ActionEvent event) {
+        try {
+            Parent homePage = FXMLLoader.load(getClass().getResource("/ui/GOODCREDIT.fxml"));
+            Scene homeScene = new Scene(homePage);
+
+            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            window.setScene(homeScene);
+            window.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Logs out the current user and navigates to the Home Page.
