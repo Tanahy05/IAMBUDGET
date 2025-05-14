@@ -101,7 +101,6 @@
 
                 <!-- Bottom Action Buttons -->
                 <HBox spacing="5" alignment="CENTER_LEFT">
-                    <Button fx:id="exportButton" text="Export Report" onAction="#handleExportReport"/>
                     <Button fx:id="dashboardButton" text="Back to Dashboard" onAction="#handleBackToDashboard"/>
                 </HBox>
             </VBox>
