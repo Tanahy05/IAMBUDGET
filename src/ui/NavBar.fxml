@@ -24,6 +24,7 @@
         <Button text="Add Budgets" onAction="#showBudgets" style="-fx-background-color: white; -fx-text-fill: black;"/>
         <Button text="Reminders" onAction="#showReminders" style="-fx-background-color: white; -fx-text-fill: black;"/>
         <Button text="Expense Tracker" onAction="#showExpense" style="-fx-background-color: white; -fx-text-fill: black;"/>
+        <Button text="Credits" onAction="#showCredits" style="-fx-background-color: white; -fx-text-fill: black;"/>
         <Button text="Logout" onAction="#handleLogout" style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
 
 

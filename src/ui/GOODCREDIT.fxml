@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controller.GOODCREDIT"
+            prefHeight="600.0" prefWidth="800.0"
+            style="-fx-background-color: #F0F0F0;">
+    <children>
+        <VBox spacing="10" AnchorPane.topAnchor="10.0" AnchorPane.leftAnchor="10.0"
+              AnchorPane.rightAnchor="10.0" AnchorPane.bottomAnchor="10.0">
+            <fx:include source="NavBar.fxml"></fx:include>
+            <VBox spacing="15" alignment="CENTER" VBox.vgrow="ALWAYS">            <padding>
+                <Insets top="15" right="15" bottom="15" left="15"/>
+            </padding>
+
+                <!-- Header -->
+                <Label text="Credits" style="-fx-text-fill: #333333;" styleClass="header-label">
+                    <font>
+                        <Font name="System Bold" size="32.0"/>
+                    </font>
+                </Label>
+
+                <!-- Logo/Image in the center -->
+                <StackPane alignment="CENTER" VBox.vgrow="ALWAYS">
+                    <ImageView fx:id="creditImage" fitWidth="300" fitHeight="300" preserveRatio="true">
+                        <Image url="@/Assets/GOODCREDIT.png"/>
+                    </ImageView>
+                </StackPane>
+
+                <!-- Development Team -->
+                <VBox spacing="5" alignment="CENTER">
+                    <Label text="Developed By" style="-fx-text-fill: #333333;">
+                        <font>
+                            <Font name="System Bold" size="18.0"/>
+                        </font>
+                    </Label>
+
+                    <Label text="I AM BUDGET Team" style="-fx-text-fill: #333333;">
+                        <font>
+                            <Font size="16.0"/>
+                        </font>
+                    </Label>
+
+                    <Label text="Version 1.0.0" style="-fx-text-fill: #666666;">
+                        <font>
+                            <Font size="14.0"/>
+                        </font>
+                    </Label>
+                </VBox>
+
+                <!-- Team members -->
+                <HBox spacing="30" alignment="CENTER">
+                    <VBox alignment="CENTER" spacing="5" styleClass="team-member">
+
+                        <Label text="Khaled hawash" style="-fx-text-fill: #333333;">
+                            <font>
+                                <Font size="14.0"/>
+                            </font>
+                        </Label>
+                    </VBox>
+
+                    <VBox alignment="CENTER" spacing="5" styleClass="team-member">
+
+                        <Label text="Mohamed Eltanahy" style="-fx-text-fill: #333333;">
+                            <font>
+                                <Font size="14.0"/>
+                            </font>
+                        </Label>
+                    </VBox>
+
+                    <VBox alignment="CENTER" spacing="5" styleClass="team-member">
+
+                        <Label text="Yahia diaa" style="-fx-text-fill: #333333;">
+                            <font>
+                                <Font size="14.0"/>
+                            </font>
+                        </Label>
+                    </VBox>
+                </HBox>
+
+                <!-- Copyright info -->
+                <Label text="© 2025 I AM BUDGET. All Rights Reserved." style="-fx-text-fill: #666666;">
+                    <font>
+                        <Font size="14.0"/>
+                    </font>
+                </Label>
+            </VBox>
+        </VBox>
+    </children>
+</AnchorPane>
